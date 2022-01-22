@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:op_inventory_billing_app/screens/billing_screen.dart';
 import 'package:op_inventory_billing_app/screens/sales_screen.dart';
 import 'package:op_inventory_billing_app/widgets/TextWidget.dart';
 import 'package:op_inventory_billing_app/widgets/table.dart';
@@ -64,9 +65,8 @@ class TabBarState extends State<TabBarScreen > with SingleTickerProviderStateMix
               controller: _controller!,
               children: <Widget>[
                 Icon(Icons.flight, size: 350),
-                Icon(Icons.directions_transit, size: 350),
+                BillingScreen(),
                 SalesScreen()
-
               ],
             ),
           )),

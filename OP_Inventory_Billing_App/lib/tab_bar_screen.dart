@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:op_inventory_billing_app/screens/sales_screen.dart';
 import 'package:op_inventory_billing_app/widgets/TextWidget.dart';
+import 'package:op_inventory_billing_app/widgets/table.dart';
 
 class TabBarScreen extends StatefulWidget {
   const TabBarScreen ({Key? key}) : super(key: key);
@@ -63,7 +65,7 @@ class TabBarState extends State<TabBarScreen > with SingleTickerProviderStateMix
               children: <Widget>[
                 Icon(Icons.flight, size: 350),
                 Icon(Icons.directions_transit, size: 350),
-                Icon(Icons.directions_car, size: 350),
+                SalesScreen()
 
               ],
             ),

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:op_inventory_billing_app/screens/billing_screen.dart';
 import 'package:op_inventory_billing_app/screens/sales_screen.dart';
+import 'package:op_inventory_billing_app/screens/products/product_screen.dart';
 import 'package:op_inventory_billing_app/widgets/TextWidget.dart';
 import 'package:op_inventory_billing_app/widgets/table.dart';
 
@@ -48,7 +49,7 @@ class TabBarState extends State<TabBarScreen > with SingleTickerProviderStateMix
                   pinned: true,
                   floating: true,
                   bottom: TabBar(
-                    indicatorColor: Colors.blueGrey,
+                    indicatorColor: Colors.grey,
                     controller: _controller!,
                     // isScrollable: true,
                     tabs: [
@@ -64,7 +65,7 @@ class TabBarState extends State<TabBarScreen > with SingleTickerProviderStateMix
             body: TabBarView(
               controller: _controller!,
               children: <Widget>[
-                Icon(Icons.flight, size: 350),
+                ProductScreen(),
                 BillingScreen(),
                 SalesScreen()
               ],

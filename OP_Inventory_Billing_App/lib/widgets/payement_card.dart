@@ -16,10 +16,11 @@ class PayementCard extends StatelessWidget {
     var list = List.generate(50, (index) => index + 1)..shuffle();
     return list.take(5).join('');
   }
-  String get BillingId {
-    var list = List.generate(50, (index) => index + 1);
-    String BillingIdlist = list.take(1).join('');
-    String BillingIdpad = BillingIdlist.padLeft(5, '0');
+  int a = 1;
+  List l = [];
+  String  get BillingId {
+    String BillingIdpad = a.toString().padLeft(5,'0');
+    print(BillingIdpad);
     return BillingIdpad;
   }
   Future<void> insertData() async {
@@ -39,51 +40,53 @@ class PayementCard extends StatelessWidget {
      }else{
        print('error');
      }
-
   }
   @override
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
     var h = size.height;
     var w = size.width;
-    return Container(
-      padding: EdgeInsets.only(left: 15),
-      height: h/5,
-      width: double.infinity,
-      margin: const EdgeInsets.all(20),
-      decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(10),
-          border: Border.all(
-            color: Colors.black26,
-            width: 1,
-          )),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const MyText(text: "Billing amount",size: 15,fontColor: Colors.black,fontWeight: FontWeight.bold,),
-          const SizedBox(
-            height: 5,
-          ),
-           MyText(text: total.toString(),size: 10,fontColor: Colors.black,fontWeight: FontWeight.bold,),
-          const SizedBox(
-            height: 5,
-          ),
-          SizedBox(
-            width: 280,
-            child: ElevatedButton(child: const MyText(text:'Pay'),style: ElevatedButton.styleFrom(
-              primary: Colors.white70, // background
-              onPrimary: Colors.black,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(30.0),
-              ),// foreground
+    return Center(
+      child: Container(
+        padding: EdgeInsets.only(left: 15),
+        height: h/5,
+        width: double.infinity,
+        margin: const EdgeInsets.all(20),
+        decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(10),
+            border: Border.all(
+              color: Colors.black26,
+              width: 1,
+            )),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const MyText(text: "Billing amount",size: 15,fontColor: Colors.black,fontWeight: FontWeight.bold,),
+            const SizedBox(
+              height: 5,
             ),
-              onPressed: () {
-                 insertData();
-              },
+             MyText(text: "Rs " + total.toString(),size: 10,fontColor: Colors.black,fontWeight: FontWeight.bold,),
+            const SizedBox(
+              height: 5,
             ),
-          )
-        ],
+            SizedBox(
+              width: 280,
+              child: ElevatedButton(child: const MyText(text:'Pay'),style: ElevatedButton.styleFrom(
+                primary: Colors.white70, // background
+                onPrimary: Colors.black,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(30.0),
+                ),// foreground
+              ),
+                onPressed: () {
+                   insertData();
+                   a++;
+                },
+              ),
+            )
+          ],
+        ),
       ),
     );
   }

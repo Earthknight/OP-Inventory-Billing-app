@@ -9,8 +9,8 @@ class BillingScreen extends StatefulWidget {
   _BillingState createState() => _BillingState();
 }
 String name = 'Banana';
-int cost = 254;
-int discount = 51;
+int cost = 256;
+int discount = 1;
 String time = DateTime.now().toString();
 int items = 3;
 class _BillingState extends State<BillingScreen> {

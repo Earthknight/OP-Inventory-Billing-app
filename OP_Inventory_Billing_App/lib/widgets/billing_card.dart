@@ -32,10 +32,10 @@ class BillingCard extends StatelessWidget {
                 ),
                 Row(
                   children:  [
-                    MyText(text: cost.toString(),size: 14,fontColor: Colors.black,fontWeight: FontWeight.bold,),
+                    MyText(text: "Rs " + cost.toString(),size: 14,fontColor: Colors.black,fontWeight: FontWeight.bold,),
                        Padding(
-                      padding: EdgeInsets.only(top: 0.01 * h,left: 0.01 * w),
-                      child: MyText(text: discount.toString() + "%",size: 2,fontColor: Colors.red),
+                      padding: EdgeInsets.only(top: 0.00 * h,left: 0.02 * w),
+                      child: MyText(text: discount.toString() + "%",size: 1,fontColor: Colors.red),
                     ),
                   ],
                 ),
@@ -44,6 +44,9 @@ class BillingCard extends StatelessWidget {
                   height: 10,
                 ),MyText(text: time,size: -1,fontColor: Colors.grey),
               ],
+            ),
+            SizedBox(
+              width: w/42,
             ),
             Container(
               height: h/8,

@@ -20,12 +20,12 @@ class Product {
 
   factory Product.fromJson(Map<dynamic, dynamic> jsonData) {
     return Product(
-      productId: jsonData['ProductID'],
-      productName: jsonData['ProductName'],
-      productCost: jsonData['ProductCost'].toString(),
-      productInStock:  jsonData['ProductinStock'].toString(),
-      sellingPrice: jsonData['SellingPrice'].toString(),
-      discount: jsonData['Discount'].toString(),
+      productId: jsonData['productId'],
+      productName: jsonData['productName'],
+      productCost: jsonData['productCost'].toString(),
+      productInStock:  jsonData['productInStock'].toString(),
+      sellingPrice: jsonData['sellingPrice'].toString(),
+      discount: jsonData['discount'].toString(),
     );
   }
 }

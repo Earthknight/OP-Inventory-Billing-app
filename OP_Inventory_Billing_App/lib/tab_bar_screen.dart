@@ -44,7 +44,7 @@ class TabBarState extends State<TabBarScreen > with SingleTickerProviderStateMix
                 SliverAppBar(
                   backgroundColor: Colors.white,
                   title: const Center(
-                    child: MyText(text: "Inventory & Billing App", fontWeight: FontWeight.bold, size: 15.0,),
+                    child: MyText(text: "Inventory & Billing App", fontWeight: FontWeight.bold, size: 13.0,),
                   ),
                   pinned: true,
                   floating: true,

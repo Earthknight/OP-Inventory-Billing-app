@@ -1,7 +1,6 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'dart:async';
-import 'package:http/http.dart' as http;
 import 'package:http/http.dart';
 import 'package:op_inventory_billing_app/model/products/product.dart';
 import 'package:op_inventory_billing_app/screens/products/update_product_screen.dart';

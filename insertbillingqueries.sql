@@ -3,9 +3,9 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jan 24, 2022 at 05:40 PM
--- Server version: 10.4.22-MariaDB
--- PHP Version: 8.1.1
+-- Generation Time: Jan 24, 2022 at 06:14 PM
+-- Server version: 8.0.26
+-- PHP Version: 8.0.13
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -33,7 +33,7 @@ CREATE TABLE `billing` (
   `BillingTaxNum` int DEFAULT NULL,
   `Items` int DEFAULT NULL,
   `BillingAmount` int DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
 -- Dumping data for table `billing`
@@ -44,32 +44,27 @@ INSERT INTO `billing` (`BillingID`, `BillingDateTime`, `BillingTaxNum`, `Items`,
 
 -- --------------------------------------------------------
 
-
-
 --
 -- Table structure for table `products`
 --
 
 CREATE TABLE `products` (
-  `productId` varchar(255) NOT NULL,
-  `productName` varchar(255) NOT NULL,
-  `productCost` int(11) NOT NULL,
-  `productInStock` int(11) NOT NULL,
-  `sellingPrice` int(11) NOT NULL,
-  `discount` int(100) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+  `ProductID` varchar(255) DEFAULT NULL,
+  `ProductName` varchar(255) DEFAULT NULL,
+  `ProductBCost` int DEFAULT NULL,
+  `ProductSCost` int DEFAULT NULL,
+  `Discount` int DEFAULT NULL,
+  `ProductinStock` int DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
 -- Dumping data for table `products`
 --
 
-INSERT INTO `products` (`productId`, `productName`, `productCost`, `productInStock`, `sellingPrice`, `discount`) VALUES
-('P100', 'Milk', 20, 100, 0, 0),
-('P101', 'Apple', 5, 8, 10, 5),
-('P102', 'Mango', 12, 15, 10, 5);
+INSERT INTO `products` (`ProductID`, `ProductName`, `ProductBCost`, `ProductSCost`, `Discount`, `ProductinStock`) VALUES
+('P100', 'Milk', 20, 20, 50, 100);
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
-

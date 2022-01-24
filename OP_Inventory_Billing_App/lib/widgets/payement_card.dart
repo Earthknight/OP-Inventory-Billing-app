@@ -5,7 +5,7 @@ import 'package:http/http.dart' as http;
 
 
 class PayementCard extends StatelessWidget {
-  int total = 250;
+  int total = 250;    //Total amount
   final int cost;
   final String time;
   final int items;
@@ -13,20 +13,19 @@ class PayementCard extends StatelessWidget {
       {required this.cost,required this.time, required this.items});
 
   String get Taxnumber {
-    var list = List.generate(50, (index) => index + 1)..shuffle();
+    var list = List.generate(50, (index) => index + 1)..shuffle();    //get function to get taxnumber
     return list.take(5).join('');
   }
-  int a = 1;
-  List l = [];
+  int a = 1;    // used a counter to increment billingid
   String  get BillingId {
     String BillingIdpad = a.toString().padLeft(5,'0');
-    print(BillingIdpad);
+    print(BillingIdpad);                                //get function to get billing id
     return BillingIdpad;
   }
   Future<void> insertData() async {
     var url = Uri.parse("http://192.168.174.1/Op/insertbilling.php");
      var response = await http.post(url, body: {
-      "billingid": BillingId.toString(),
+      "billingid": BillingId.toString(),                          //insertdata function in database refer inserbilling.php file
       "billingdatetime": time.toString(),
       "billingtaxnum": Taxnumber.toString(),
       "items": items.toString(),
@@ -44,13 +43,13 @@ class PayementCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
-    var h = size.height;
+    var h = size.height;                        //mediaquery
     var w = size.width;
     return Center(
       child: Container(
         padding: EdgeInsets.only(left: 15),
         height: h/5,
-        width: double.infinity,
+        width: double.infinity,                       //parentcontainer
         margin: const EdgeInsets.all(20),
         decoration: BoxDecoration(
             color: Colors.white,
@@ -62,7 +61,7 @@ class PayementCard extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const MyText(text: "Billing amount",size: 15,fontColor: Colors.black,fontWeight: FontWeight.bold,),
+            const MyText(text: "Billing amount",size: 15,fontColor: Colors.black,fontWeight: FontWeight.bold,),     //billing amount text
             const SizedBox(
               height: 5,
             ),
@@ -80,7 +79,7 @@ class PayementCard extends StatelessWidget {
                 ),// foreground
               ),
                 onPressed: () {
-                   insertData();
+                   insertData();  //calls insertdata and increments a
                    a++;
                 },
               ),

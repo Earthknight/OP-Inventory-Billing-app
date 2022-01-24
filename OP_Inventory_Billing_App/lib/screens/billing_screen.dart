@@ -11,7 +11,7 @@ class BillingScreen extends StatefulWidget {
 String name = 'Banana';
 int cost = 256;
 int discount = 1;
-String time = DateTime.now().toString();
+String time = DateTime.now().toString();        //dummy data which will be used in Billing car and Payement card
 int items = 3;
 class _BillingState extends State<BillingScreen> {
   @override

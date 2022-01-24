@@ -1,41 +1,53 @@
 import 'package:flutter/material.dart';
 import'dart:core';
 import 'TextWidget.dart';
-class BillingCard extends StatelessWidget {
-  const BillingCard({Key?key}) : super(key: key);
 
+class BillingCard extends StatelessWidget {
+
+  final String name;
+  final int cost;
+  final int discount;
+  final String time;
+  final int items;
+
+  const BillingCard(
+      {required this.name, required this.cost, required this.discount, required this.time, required this.items});
   @override
+
   Widget build(BuildContext context) {
+    var size = MediaQuery.of(context).size;
+    var h = size.height;
+    var w = size.width;
     return Card(
       child: Padding(
-        padding: const EdgeInsets.all(10),
+        padding: const EdgeInsets.only(left: 10,top: 10,right: 0,bottom: 10),
         child: Row(
           children: [
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const MyText(text: "Banana",size: 20,fontColor: Colors.black,fontWeight: FontWeight.bold,),
+                   MyText(text: name,size: 20,fontColor: Colors.black,fontWeight: FontWeight.bold,),
                 const SizedBox(
                   height: 10,
                 ),
                 Row(
-                  children: const [
-                    MyText(text: "Rs200",size: 14,fontColor: Colors.black,fontWeight: FontWeight.bold,),
-                    Padding(
-                      padding: EdgeInsets.only(top: 4,left: 4),
-                      child: MyText(text: "50%",size: 2,fontColor: Colors.red),
+                  children:  [
+                    MyText(text: cost.toString(),size: 14,fontColor: Colors.black,fontWeight: FontWeight.bold,),
+                       Padding(
+                      padding: EdgeInsets.only(top: 0.01 * h,left: 0.01 * w),
+                      child: MyText(text: discount.toString() + "%",size: 2,fontColor: Colors.red),
                     ),
                   ],
                 ),
 
                 const SizedBox(
                   height: 10,
-                ),MyText(text: DateTime.now().toString(),size: -1,fontColor: Colors.grey),
+                ),MyText(text: time,size: -1,fontColor: Colors.grey),
               ],
             ),
             Container(
-              height: 80,
-              width: 80,
+              height: h/8,
+              width: w/4,
               margin: const EdgeInsets.all(20),
               decoration: BoxDecoration(
                   color: Colors.white,
@@ -55,10 +67,10 @@ class BillingCard extends StatelessWidget {
                     color: Colors.black26,
                     width: 1,
                   )),
-              child: const Center(
-                child:  MyText(text: '2',size: 18,fontColor: Colors.black,fontWeight: FontWeight.bold,),
+              child:  Center(
+                child:  MyText(text: items.toString(),size: 18,fontColor: Colors.black,fontWeight: FontWeight.bold,),
               ),
-              padding: const EdgeInsets.all(10),
+              padding: EdgeInsets.all(w/14),
             )
           ],
         ),

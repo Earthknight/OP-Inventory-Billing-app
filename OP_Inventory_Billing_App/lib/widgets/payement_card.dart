@@ -1,15 +1,54 @@
+import 'dart:convert';
 import 'package:flutter/material.dart';
-
 import 'TextWidget.dart';
+import 'package:http/http.dart' as http;
+
 
 class PayementCard extends StatelessWidget {
-  const PayementCard({Key?key}) : super(key: key);
+  int total = 250;
+  final int cost;
+  final String time;
+  final int items;
+  PayementCard(
+      {required this.cost,required this.time, required this.items});
 
+  String get Taxnumber {
+    var list = List.generate(50, (index) => index + 1)..shuffle();
+    return list.take(5).join('');
+  }
+  String get BillingId {
+    var list = List.generate(50, (index) => index + 1);
+    String BillingIdlist = list.take(1).join('');
+    String BillingIdpad = BillingIdlist.padLeft(5, '0');
+    return BillingIdpad;
+  }
+  Future<void> insertData() async {
+    var url = Uri.parse("http://192.168.0.7/insertbilling.php");
+     var response = await http.post(url, body: {
+      "billingid": BillingId.toString(),
+      "billingdatetime": time.toString(),
+      "billingtaxnum": Taxnumber.toString(),
+      "items": items.toString(),
+      "billingamount": cost.toString()
+    });
+     if(response.statusCode == 200){
+       print(response.body);
+       if(response.body.isNotEmpty) {
+         json.decode(response.body);
+       }
+     }else{
+       print('error');
+     }
+
+  }
   @override
   Widget build(BuildContext context) {
+    var size = MediaQuery.of(context).size;
+    var h = size.height;
+    var w = size.width;
     return Container(
       padding: EdgeInsets.only(left: 15),
-      height: 150,
+      height: h/5,
       width: double.infinity,
       margin: const EdgeInsets.all(20),
       decoration: BoxDecoration(
@@ -26,7 +65,7 @@ class PayementCard extends StatelessWidget {
           const SizedBox(
             height: 5,
           ),
-          const MyText(text: "Rs200",size: 10,fontColor: Colors.black,fontWeight: FontWeight.bold,),
+           MyText(text: total.toString(),size: 10,fontColor: Colors.black,fontWeight: FontWeight.bold,),
           const SizedBox(
             height: 5,
           ),
@@ -39,7 +78,9 @@ class PayementCard extends StatelessWidget {
                 borderRadius: BorderRadius.circular(30.0),
               ),// foreground
             ),
-              onPressed: () {},
+              onPressed: () {
+                 insertData();
+              },
             ),
           )
         ],

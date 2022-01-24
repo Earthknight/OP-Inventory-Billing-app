@@ -13,8 +13,7 @@ double screenWidth = 0.0;
 
 Future<List<Product>> downloadJSON() async {
   // print("download json called");
-  const jsonEndpoint =
-      "http://192.168.1.107:8080/php_workspace/product/getData.php";
+  const jsonEndpoint = "http://192.168.174.1/Op/getData.php";
   final response = await get(Uri.parse(jsonEndpoint));
   if (response.statusCode == 200) {
     List products = json.decode(response.body);
@@ -38,35 +37,37 @@ class ProductScreenState extends State<ProductScreen> {
     final screenSize = GetDeviceSize.getDeviceSize(context);
     screenWidth = screenSize.width;
     return Scaffold(
-        floatingActionButton: FloatingActionButton(
-          child: Icon(
-            Icons.add,
-            color: Colors.white,
-            size: screenWidth * 0.075,
-          ),
-          backgroundColor: Colors.black,
-          onPressed: () {
-            Navigator.push(context, MaterialPageRoute(builder: (context) {
-              return UpdateProductScreen();
-            }));
-          },
+      floatingActionButton: FloatingActionButton(
+        child: Icon(
+          Icons.add,
+          color: Colors.white,
+          size: screenWidth * 0.075,
         ),
-        body: FutureBuilder<List<Product>>(
-            future: downloadJSON(),
-            builder: (context, snapshot) {
-              if (snapshot.hasError) print(snapshot.error);
-              return snapshot.hasData
-                  ? Padding(
-                      padding: EdgeInsets.only(
-                          left: screenWidth * 0.03, right: screenWidth * 0.03),
-                      child: Items(
-                        list: snapshot.data ?? [],
-                      ),
-                    )
-                  : Center(
-                      child: CircularProgressIndicator(),
-                    );
-            }));
+        backgroundColor: Colors.black,
+        onPressed: () {
+          Navigator.push(context, MaterialPageRoute(builder: (context) {
+            return UpdateProductScreen();
+          }));
+        },
+      ),
+      body: FutureBuilder<List<Product>>(
+        future: downloadJSON(),
+        builder: (context, snapshot) {
+          if (snapshot.hasError) print(snapshot.error);
+          return snapshot.hasData
+              ? Padding(
+                  padding: EdgeInsets.only(
+                      left: screenWidth * 0.03, right: screenWidth * 0.03),
+                  child: Items(
+                    list: snapshot.data ?? [],
+                  ),
+                )
+              : Center(
+                  child: CircularProgressIndicator(),
+                );
+        },
+      ),
+    );
   }
 }
 

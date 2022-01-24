@@ -2,8 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:horizontal_data_table/horizontal_data_table.dart';
 import 'dart:math';
 
+import 'package:op_inventory_billing_app/model/billing.dart';
+
 class SalesTable extends StatefulWidget {
-  SalesTable({Key? key}) : super(key: key);
+  List<Billing> list;
+  SalesTable({Key? key,required this.list}) : super(key: key);
 
   @override
   SalesTableState createState() => SalesTableState();
@@ -12,16 +15,34 @@ class SalesTable extends StatefulWidget {
 class SalesTableState extends State<SalesTable> {
   final HDTRefreshController _hdtRefreshController = HDTRefreshController();
 
-  static const int sortBillingId = 0;
+  static const int sortByBillingId = 0;
   static const int sortcountProducts = 1;
   bool isAscending = true;
-  int sortType = sortBillingId;
+  int sortType = sortByBillingId;
   double h = 0.0;
   double w = 0.0;
   @override
   void initState() {
-    user.initData(1000);
+    //user.initData(1000);
     super.initState();
+  }
+
+  void sortBillingId(bool isAscending) {
+    widget.list.sort((a, b) {
+      //Compares items a and b according to the sorting function which we have created in the follwing LOC
+      int aId = int.parse(a.billingId);
+      int bId = int.parse(b.billingId);
+      return (aId - bId) * (isAscending ? 1 : -1);
+    });
+  }
+
+  void sortNoOfProducts(bool isAscending) {
+    widget.list.sort((a, b) {
+      //Compares items a and b according to the sorting function which we have created in the follwing LOC
+      int aId = a.items;
+      int bId = b.items;
+      return (aId - bId) * (isAscending ? 1 : -1);
+    });
   }
 
   @override
@@ -37,7 +58,7 @@ class SalesTableState extends State<SalesTable> {
         headerWidgets: _getTitleWidget(),
         leftSideItemBuilder: _generateFirstColumnRow,
         rightSideItemBuilder: _generateRightHandSideColumnRow,
-        itemCount: user.userInfo.length,
+        itemCount: widget.list.length,
         rowSeparatorWidget: const Divider(
           color: Colors.black54,
           height: 1.0,
@@ -78,13 +99,13 @@ class SalesTableState extends State<SalesTable> {
         ),
         child: _getTitleItemWidget(
             'Billing ID' +
-                (sortType == sortBillingId ? (isAscending ? '↓' : '↑') : ''),
+                (sortType == sortByBillingId ? (isAscending ? '↓' : '↑') : ''),
             0.25 * w),
         onPressed: () {
           //print("Height is" + h.toString() + "Width is" + w.toString());
-          sortType = sortBillingId;
+          sortType = sortByBillingId;
           isAscending = !isAscending;
-          user.sortBillingId(isAscending);
+          sortBillingId(isAscending);
           setState(() {});
         },
       ),
@@ -101,7 +122,7 @@ class SalesTableState extends State<SalesTable> {
         onPressed: () {
           sortType = sortcountProducts;
           isAscending = !isAscending;
-          user.sortNoOfProducts(isAscending);
+          sortNoOfProducts(isAscending);
           setState(() {});
         },
       ),
@@ -122,7 +143,7 @@ class SalesTableState extends State<SalesTable> {
 
   Widget _generateFirstColumnRow(BuildContext context, int index) {
     return Container(
-      child: Text(user.userInfo[index].billingid),
+      child: Text(widget.list[index].billingId),
       width: 0.25 * w,
       height: 0.06 * h,
       padding: EdgeInsets.fromLTRB(0.01 * w, 0, 0, 0),
@@ -134,21 +155,21 @@ class SalesTableState extends State<SalesTable> {
     return Row(
       children: <Widget>[
         Container(
-          child: Text(user.userInfo[index].countProducts),
+          child: Text(widget.list[index].items.toString()),
           width: 0.25 * w,
           height: 0.06 * h,
           padding: EdgeInsets.fromLTRB(0.01 * w, 0, 0, 0),
           alignment: Alignment.centerLeft,
         ),
         Container(
-          child: Text('\u{20B9}' + user.userInfo[index].purchaseAmount),
+          child: Text('\u{20B9}' + widget.list[index].billingamount.toString()),
           width: 0.25 * w,
           height: 0.06 * h,
           padding: EdgeInsets.fromLTRB(0.01 * w, 0, 0, 0),
           alignment: Alignment.centerLeft,
         ),
         Container(
-          child: Text('\u{20B9}' + user.userInfo[index].sellingAmount),
+          child: Text('\u{20B9}' + widget.list[index].sellingamount.toString()),
           width: 0.25 * w,
           height: 0.06 * h,
           padding: EdgeInsets.fromLTRB(0.01 * w, 0, 0, 0),
@@ -159,47 +180,4 @@ class SalesTableState extends State<SalesTable> {
   }
 }
 
-User user = User();
 
-class User {
-  List<UserInfo> userInfo = [];
-
-  void initData(int size) {
-    Random rng = new Random();
-    for (int i = 0; i < size; i++) {
-      userInfo.add(UserInfo("$i".padLeft(8, '0'), rng.nextInt(20).toString(),
-          rng.nextInt(2000).toString(), rng.nextInt(3000).toString()));
-    }
-  }
-
-  ///
-  /// Single sort, sort Name's id
-  void sortBillingId(bool isAscending) {
-    userInfo.sort((a, b) {
-      //Compares items a and b according to the sorting function which we have created in the follwing LOC
-      int aId = int.parse(a.billingid);
-      int bId = int.parse(b.billingid);
-      return (aId - bId) * (isAscending ? 1 : -1);
-    });
-  }
-
-  void sortNoOfProducts(bool isAscending) {
-    userInfo.sort((a, b) {
-      //Compares items a and b according to the sorting function which we have created in the follwing LOC
-      int aId = int.parse(a.countProducts);
-      int bId = int.parse(b.countProducts);
-      return (aId - bId) * (isAscending ? 1 : -1);
-    });
-  }
-}
-
-class UserInfo {
-  String billingid;
-  //bool status;
-  String countProducts;
-  String purchaseAmount;
-  String sellingAmount;
-
-  UserInfo(this.billingid, this.countProducts, this.purchaseAmount,
-      this.sellingAmount);
-}

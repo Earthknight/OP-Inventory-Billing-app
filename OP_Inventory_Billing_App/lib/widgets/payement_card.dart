@@ -24,7 +24,7 @@ class PayementCard extends StatelessWidget {
     return BillingIdpad;
   }
   Future<void> insertData() async {
-    var url = Uri.parse("http://192.168.0.7/insertbilling.php");
+    var url = Uri.parse("http://192.168.174.1/Op/insertbilling.php");
      var response = await http.post(url, body: {
       "billingid": BillingId.toString(),
       "billingdatetime": time.toString(),

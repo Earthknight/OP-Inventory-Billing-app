@@ -48,7 +48,8 @@ class UpdateProductScreenState extends State<UpdateProductScreen> {
     print("addData called");
     String id = "P${productid++}";
     print("id : $id");
-    var url = "http://192.168.1.107:8080/php_workspace/product/addData.php";
+    var url = "http://192.168.174.1/Op/addData.php";
+  //  var url = "http://192.168.1.107:8080/php_workspace/product/addData.php";
     await post(Uri.parse(url),body: {
       "productId": id,
       "productName": productNameController.text,

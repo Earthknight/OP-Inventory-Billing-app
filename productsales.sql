@@ -32,15 +32,16 @@ CREATE TABLE `billing` (
   `BillingDateTime` varchar(255) DEFAULT NULL,
   `BillingTaxNum` int DEFAULT NULL,
   `Items` int DEFAULT NULL,
-  `BillingAmount` int DEFAULT NULL
+  `BillingAmount` int DEFAULT NULL,
+  `SellingAmount` int DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Dumping data for table `billing`
 --
 
-INSERT INTO `billing` (`BillingID`, `BillingDateTime`, `BillingTaxNum`, `Items`, `BillingAmount`) VALUES
-('00003', '2022-01-24 20:59:43.174864', 12195079, 3, 256);
+INSERT INTO `billing` (`BillingID`, `BillingDateTime`, `BillingTaxNum`, `Items`, `BillingAmount`,`SellingAmount`) VALUES
+('00003', '2022-01-24 20:59:43.174864', 12195079, 3, 256,324);
 
 -- --------------------------------------------------------
 

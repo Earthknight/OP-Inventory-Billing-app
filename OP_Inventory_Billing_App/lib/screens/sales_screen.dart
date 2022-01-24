@@ -31,7 +31,7 @@ class SalesScreen extends StatefulWidget {
 class _SalesScreenState extends State<SalesScreen> {
   double h = 0.0, w = 0.0;
   double revenue = 0.0, profit = 0.0;
-
+  
   void calc(List<Billing> list) {
     double sum = 0.0;
     double sp = 0.0;

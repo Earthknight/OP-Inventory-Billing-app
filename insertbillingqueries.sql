@@ -29,13 +29,14 @@ SET time_zone = "+00:00";
 
 CREATE TABLE `billing` (
   `BillingID` varchar(255) DEFAULT NULL,
-  `BillingDateTime` varchar(255) DEFAULT NULL,
+  `BillingDateTime` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `BillingTaxNum` int DEFAULT NULL,
   `Items` int DEFAULT NULL,
   `SellingAmount` int DEFAULT NULL,
   `PurchaseAmount` int DEFAULT NULL,
   `Discount` int DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
 
 
 

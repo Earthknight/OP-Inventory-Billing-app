@@ -3,53 +3,56 @@ import 'package:flutter/material.dart';
 import 'TextWidget.dart';
 import 'package:http/http.dart' as http;
 
-
 class PayementCard extends StatelessWidget {
-  int total = 250;    //Total amount
+  int total = 250; //Total amount
   final int cost;
   final String time;
   final int items;
-  PayementCard(
-      {required this.cost,required this.time, required this.items});
+  PayementCard({required this.cost, required this.time, required this.items});
 
   String get Taxnumber {
-    var list = List.generate(50, (index) => index + 1)..shuffle();    //get function to get taxnumber
+    var list = List.generate(50, (index) => index + 1)
+      ..shuffle(); //get function to get taxnumber
     return list.take(5).join('');
   }
-  int a = 1;    // used a counter to increment billingid
-  String  get BillingId {
-    String BillingIdpad = a.toString().padLeft(5,'0');
-    print(BillingIdpad);                                //get function to get billing id
+
+  int a = 1; // used a counter to increment billingid
+  String get BillingId {
+    String BillingIdpad = a.toString().padLeft(5, '0');
+    print(BillingIdpad); //get function to get billing id
     return BillingIdpad;
   }
+
   Future<void> insertData() async {
     var url = Uri.parse("http://192.168.174.1/Op/insertbilling.php");
-     var response = await http.post(url, body: {
-      "billingid": BillingId.toString(),                          //insertdata function in database refer inserbilling.php file
-      "billingdatetime": time.toString(),
+    var response = await http.post(url, body: {
+      "billingid": BillingId
+          .toString(), //insertdata function in database refer inserbilling.php file
+      "billingdatetime": DateTime.now().toString(),
       "billingtaxnum": Taxnumber.toString(),
       "items": items.toString(),
       "billingamount": cost.toString()
     });
-     if(response.statusCode == 200){
-       print(response.body);
-       if(response.body.isNotEmpty) {
-         json.decode(response.body);
-       }
-     }else{
-       print('error');
-     }
+    if (response.statusCode == 200) {
+      print(response.body);
+      if (response.body.isNotEmpty) {
+        json.decode(response.body);
+      }
+    } else {
+      print('error');
+    }
   }
+
   @override
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
-    var h = size.height;                        //mediaquery
+    var h = size.height; //mediaquery
     var w = size.width;
     return Center(
       child: Container(
         padding: EdgeInsets.only(left: 15),
-        height: h/5,
-        width: double.infinity,                       //parentcontainer
+        height: h / 5,
+        width: double.infinity, //parentcontainer
         margin: const EdgeInsets.all(20),
         decoration: BoxDecoration(
             color: Colors.white,
@@ -61,26 +64,38 @@ class PayementCard extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const MyText(text: "Billing amount",size: 15,fontColor: Colors.black,fontWeight: FontWeight.bold,),     //billing amount text
+            const MyText(
+              text: "Billing amount",
+              size: 15,
+              fontColor: Colors.black,
+              fontWeight: FontWeight.bold,
+            ), //billing amount text
             const SizedBox(
               height: 5,
             ),
-             MyText(text: "Rs " + total.toString(),size: 10,fontColor: Colors.black,fontWeight: FontWeight.bold,),
+            MyText(
+              text: "Rs " + total.toString(),
+              size: 10,
+              fontColor: Colors.black,
+              fontWeight: FontWeight.bold,
+            ),
             const SizedBox(
               height: 5,
             ),
             SizedBox(
               width: 280,
-              child: ElevatedButton(child: const MyText(text:'Pay'),style: ElevatedButton.styleFrom(
-                primary: Colors.white70, // background
-                onPrimary: Colors.black,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(30.0),
-                ),// foreground
-              ),
+              child: ElevatedButton(
+                child: const MyText(text: 'Pay'),
+                style: ElevatedButton.styleFrom(
+                  primary: Colors.white70, // background
+                  onPrimary: Colors.black,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(30.0),
+                  ), // foreground
+                ),
                 onPressed: () {
-                   insertData();  //calls insertdata and increments a
-                   a++;
+                  insertData(); //calls insertdata and increments a
+                  a++;
                 },
               ),
             )

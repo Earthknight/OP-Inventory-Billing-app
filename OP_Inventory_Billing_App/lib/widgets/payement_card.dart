@@ -4,11 +4,18 @@ import 'TextWidget.dart';
 import 'package:http/http.dart' as http;
 
 class PayementCard extends StatelessWidget {
-  int total = 250; //Total amount
-  final int cost;
+  // int total = 250;    //Total amount
+  final double sellingPrice;
+  final double purchasePrice;
   final String time;
   final int items;
-  PayementCard({required this.cost, required this.time, required this.items});
+  final int discount;
+  PayementCard(
+      {required this.sellingPrice,
+      required this.time,
+      required this.items,
+      required this.purchasePrice,
+      required this.discount});
 
   String get Taxnumber {
     var list = List.generate(50, (index) => index + 1)
@@ -31,11 +38,14 @@ class PayementCard extends StatelessWidget {
       "billingdatetime": DateTime.now().toString(),
       "billingtaxnum": Taxnumber.toString(),
       "items": items.toString(),
-      "billingamount": cost.toString()
+      "sellingamount": sellingPrice.toString(),
+      "purchaseamount": purchasePrice.toString(),
+      "discount": discount.toString()
     });
     if (response.statusCode == 200) {
       print(response.body);
-      if (response.body.isNotEmpty) {
+      if (response.body.isEmpty) {
+        insertData();
         json.decode(response.body);
       }
     } else {
@@ -74,7 +84,7 @@ class PayementCard extends StatelessWidget {
               height: 5,
             ),
             MyText(
-              text: "Rs " + total.toString(),
+              text: "Rs " + sellingPrice.toString(),
               size: 10,
               fontColor: Colors.black,
               fontWeight: FontWeight.bold,

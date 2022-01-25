@@ -11,7 +11,7 @@
   //connecting to database server
 
   $val = isset($_POST["billingid"]) && isset($_POST["billingdatetime"])
-         && isset($_POST["billingtaxnum"]) && isset($_POST["items"]) && isset($_POST["billingamount"]);
+         && isset($_POST["billingtaxnum"]) && isset($_POST["items"]) && isset($_POST["sellingamount"]) && isset($_POST["purchaseamount"]) && isset($_POST["discount"]);
 
   if($val){
        //checking if there is POST data
@@ -20,13 +20,11 @@
        $billingdatetime = $_POST["billingdatetime"];
        $billingtaxnum = $_POST["billingtaxnum"];
        $items = $_POST["items"];
-       $billingamount = $_POST["billingamount"];
+       $sellingamount = $_POST["sellingamount"];
+       $purchaseamount = $_POST["purchaseamount"];
+       $discount = $_POST["discount"];
 
        //validation name if there is no error before
-       if($return["error"] == false && strlen($billingid) < 3){
-           $return["error"] = true;
-           $return["message"] = "Enter name up to 3 characters.";
-       }
 
        //add more validations here
 
@@ -36,7 +34,9 @@
             $billingdatetime = mysqli_real_escape_string($link, $billingdatetime);
             $billingtaxnum = mysqli_real_escape_string($link, $billingtaxnum);
             $items = mysqli_real_escape_string($link, $items);
-            $billingamount = mysqli_real_escape_string($link, $billingamount);
+            $sellingamount = mysqli_real_escape_string($link, $sellingamount);
+            $purchaseamount = mysqli_real_escape_string($link, $purchaseamount);
+            $discount = mysqli_real_escape_string($link, $discount);
             //escape inverted comma query conflict from string
 
             $sql = "INSERT INTO billing SET
@@ -44,14 +44,16 @@
                                 BillingDateTime = '$billingdatetime',
                                 BillingTaxNum = '$billingtaxnum',
                                 Items = '$items',
-	           BillingAmount = '$billingamount'";
+	           SellingAmount = '$sellingamount',
+	           PurchaseAmount = '$purchaseamount',
+	           Discount = '$discount'";
 	            
-            //student_id is with AUTO_INCREMENT, so its value will increase automatically
 
             $res = mysqli_query($link, $sql);
             if($res){
                 //write success
             }else{
+                $res = mysqli_query($link, $sql);
                 $return["error"] = true;
                 $return["message"] = "Database error";
             }

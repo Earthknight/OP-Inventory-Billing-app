@@ -5,7 +5,7 @@ import 'TextWidget.dart';
 class BillingCard extends StatelessWidget {
 
   final String name;
-  final int cost;
+  final double cost;
   final int discount;
   final String time;
   final int items;

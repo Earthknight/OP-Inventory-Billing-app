@@ -11,6 +11,7 @@ import 'package:qr_flutter/qr_flutter.dart';
 
 double screenWidth = 0.0;
 
+// This Function firstly get the det from the database and then map it into a list of product
 Future<List<Product>> downloadJSON() async {
   // print("download json called");
   // const jsonEndpoint = "http://192.168.174.1/Op/getData.php";
@@ -47,6 +48,7 @@ class ProductScreenState extends State<ProductScreen> {
         ),
         backgroundColor: Colors.black,
         onPressed: () {
+          // On pressing on floating button it navigates us to the update product screen to add a new product
           Navigator.push(context, MaterialPageRoute(builder: (context) {
             return UpdateProductScreen(
               buttonTitle: 'Add',
@@ -62,6 +64,7 @@ class ProductScreenState extends State<ProductScreen> {
           }));
         },
       ),
+      //
       body: FutureBuilder<List<Product>>(
         future: downloadJSON(),
         builder: (context, snapshot) {
@@ -70,10 +73,12 @@ class ProductScreenState extends State<ProductScreen> {
               ? Padding(
                   padding: EdgeInsets.only(
                       left: screenWidth * 0.03, right: screenWidth * 0.03),
+                  // calling item class to show the list of products in listview.builder
                   child: Items(
                     list: snapshot.data ?? [],
                   ),
                 )
+          // Displaying LoadingSpinner to indicate waiting state
               : Center(
                   child: CircularProgressIndicator(),
                 );
@@ -116,6 +121,7 @@ class Items extends StatelessWidget {
           leading: SizedBox(
             height: screenWidth * 0.1,
             width: screenWidth * 0.1,
+            // to store all the data of product in the form of QR
             child: QrImage(
               data: product.productId.toString(),
               version: QrVersions.auto,
@@ -134,6 +140,7 @@ class Items extends StatelessWidget {
             ),
           ),
           ontap: () {
+            // Navigation for the updating of product
             Navigator.push(context, MaterialPageRoute(builder: (context) {
               return UpdateProductScreen(
                 buttonTitle: 'Update',

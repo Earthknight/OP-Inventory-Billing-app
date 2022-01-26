@@ -10,6 +10,7 @@ import 'package:op_inventory_billing_app/widgets/get_device_size.dart';
 
 import '../../tab_bar_screen.dart';
 
+// Function to get new ProductId of the project
 Future<String> getProductId() async {
   var list = await downloadJSON();
   String id  = list[list.length-1].productId.substring(1);
@@ -17,6 +18,7 @@ Future<String> getProductId() async {
   print("P${idNumber++}");
   return "P${idNumber++}";
 }
+
 class UpdateProductScreen extends StatefulWidget {
 
   final String appBarTitle;
@@ -51,6 +53,7 @@ class UpdateProductScreenState extends State<UpdateProductScreen> {
     discountPercentageController.text = widget.product.discount!;
   }
 
+  // Function for adding a new product
   void addData() async {
     var productId = await getProductId();
     // print("addData called");
@@ -67,6 +70,8 @@ class UpdateProductScreenState extends State<UpdateProductScreen> {
       "discount": discountPercentageController.text
     });
   }
+
+  // Function for edit a product
   void editData() async {
     print("editData called");
     // var url = "http://192.168.174.1/Op/addData.php";

@@ -15,7 +15,10 @@ double screenWidth = 0.0;
 Future<List<Product>> downloadJSON() async {
   // print("download json called");
   // const jsonEndpoint = "http://192.168.174.1/Op/getData.php";
-  const jsonEndpoint = "http://192.168.1.107:8080/php_workspace/product/getData.php";
+  const jsonEndpoint =
+      "http://192.168.1.107:8080/php_workspace/product/getData.php";
+  // const jsonEndpoint =
+  //     "http://192.168.0.105:80/php_workspace/inventory_app/getData.php";
   final response = await get(Uri.parse(jsonEndpoint));
   if (response.statusCode == 200) {
     List products = json.decode(response.body);
@@ -34,7 +37,6 @@ class ProductScreen extends StatefulWidget {
 }
 
 class ProductScreenState extends State<ProductScreen> {
-
   @override
   Widget build(BuildContext context) {
     final screenSize = GetDeviceSize.getDeviceSize(context);
@@ -78,7 +80,7 @@ class ProductScreenState extends State<ProductScreen> {
                     list: snapshot.data ?? [],
                   ),
                 )
-          // Displaying LoadingSpinner to indicate waiting state
+              // Displaying LoadingSpinner to indicate waiting state
               : Center(
                   child: CircularProgressIndicator(),
                 );

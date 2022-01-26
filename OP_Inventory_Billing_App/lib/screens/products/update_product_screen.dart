@@ -13,18 +13,22 @@ import '../../tab_bar_screen.dart';
 // Function to get new ProductId of the project
 Future<String> getProductId() async {
   var list = await downloadJSON();
-  String id  = list[list.length-1].productId.substring(1);
+  String id = list[list.length - 1].productId.substring(1);
   int idNumber = int.parse(id);
   print("P${idNumber++}");
   return "P${idNumber++}";
 }
 
 class UpdateProductScreen extends StatefulWidget {
-
   final String appBarTitle;
   final Product product;
   final String buttonTitle;
-  UpdateProductScreen({Key? key, required this.appBarTitle, required this.product, required this.buttonTitle}) : super(key: key);
+  UpdateProductScreen(
+      {Key? key,
+      required this.appBarTitle,
+      required this.product,
+      required this.buttonTitle})
+      : super(key: key);
 
   @override
   State<StatefulWidget> createState() => UpdateProductScreenState();
@@ -36,13 +40,10 @@ class UpdateProductScreenState extends State<UpdateProductScreen> {
   final _formKey = GlobalKey<FormState>();
 
   TextEditingController productNameController = TextEditingController();
-  TextEditingController productRatePerItemController =
-  TextEditingController();
-  TextEditingController sellingRatePerItemController =
-  TextEditingController();
+  TextEditingController productRatePerItemController = TextEditingController();
+  TextEditingController sellingRatePerItemController = TextEditingController();
   TextEditingController quantityController = TextEditingController();
-  TextEditingController discountPercentageController =
-  TextEditingController();
+  TextEditingController discountPercentageController = TextEditingController();
 
   @override
   void initState() {
@@ -60,12 +61,13 @@ class UpdateProductScreenState extends State<UpdateProductScreen> {
     String id = productId;
     // print("id : $id");
     // var url = "http://192.168.174.1/Op/addData.php";
-   var url = "http://192.168.1.107:8080/php_workspace/product/addData.php";
-    await post(Uri.parse(url),body: {
+    var url = "http://192.168.1.107:8080/php_workspace/product/addData.php";
+    // var url = "http://192.168.0.105:80/php_workspace/inventory_app/addData.php";
+    await post(Uri.parse(url), body: {
       "productId": id,
       "productName": productNameController.text,
       "productCost": productRatePerItemController.text,
-      "productInStock":  sellingRatePerItemController.text,
+      "productInStock": sellingRatePerItemController.text,
       "sellingPrice": quantityController.text,
       "discount": discountPercentageController.text
     });
@@ -76,16 +78,17 @@ class UpdateProductScreenState extends State<UpdateProductScreen> {
     print("editData called");
     // var url = "http://192.168.174.1/Op/addData.php";
     var url = "http://192.168.1.107:8080/php_workspace/product/editData.php";
-    await post(Uri.parse(url),body: {
+    // var url =
+    // "http://192.168.0.105:80/php_workspace/inventory_app/editData.php";
+    await post(Uri.parse(url), body: {
       "productId": widget.product.productId,
       "productName": productNameController.text,
       "productCost": productRatePerItemController.text,
-      "productInStock":  quantityController.text,
+      "productInStock": quantityController.text,
       "sellingPrice": sellingRatePerItemController.text,
       "discount": discountPercentageController.text
     });
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -100,7 +103,7 @@ class UpdateProductScreenState extends State<UpdateProductScreen> {
           icon: Icon(Icons.arrow_back, color: Colors.black),
           onPressed: () => Navigator.of(context).pop(),
         ),
-        title:  Center(
+        title: Center(
           child: MyText(
             text: widget.appBarTitle,
             fontWeight: FontWeight.bold,
@@ -127,9 +130,8 @@ class UpdateProductScreenState extends State<UpdateProductScreen> {
                   text: "PRODUCT NAME",
                   size: 3.0,
                 ),
-                MyTextField(
-                 productNameController, TextInputType.text, "Enter the Product name" , "Please Enter a value"
-                ),
+                MyTextField(productNameController, TextInputType.text,
+                    "Enter the Product name", "Please Enter a value"),
                 SizedBox(
                   height: 0.05 * screenHeight,
                 ),
@@ -137,9 +139,8 @@ class UpdateProductScreenState extends State<UpdateProductScreen> {
                   text: "PURCHASE RATE PER ITEM",
                   size: 3.0,
                 ),
-                MyTextField(
-                  productRatePerItemController, TextInputType.number, "Enter the purchase rate per item" , "Please Enter a value"
-                ),
+                MyTextField(productRatePerItemController, TextInputType.number,
+                    "Enter the purchase rate per item", "Please Enter a value"),
                 SizedBox(
                   height: 0.05 * screenHeight,
                 ),
@@ -147,9 +148,8 @@ class UpdateProductScreenState extends State<UpdateProductScreen> {
                   text: "SELLING RATE PER ITEM",
                   size: 3.0,
                 ),
-                MyTextField(
-                  sellingRatePerItemController, TextInputType.number, "Enter the selling rate per item" , "Please Enter a value"
-                ),
+                MyTextField(sellingRatePerItemController, TextInputType.number,
+                    "Enter the selling rate per item", "Please Enter a value"),
                 SizedBox(
                   height: 0.05 * screenHeight,
                 ),
@@ -158,8 +158,10 @@ class UpdateProductScreenState extends State<UpdateProductScreen> {
                   size: 3.0,
                 ),
                 MyTextField(
-                  quantityController, TextInputType.number, "Enter the Quantity of the product" , "Please Enter a value"
-                ),
+                    quantityController,
+                    TextInputType.number,
+                    "Enter the Quantity of the product",
+                    "Please Enter a value"),
                 SizedBox(
                   height: 0.05 * screenHeight,
                 ),
@@ -167,9 +169,8 @@ class UpdateProductScreenState extends State<UpdateProductScreen> {
                   text: "DISCOUNT PERCENTAGE",
                   size: 3.0,
                 ),
-                MyTextField(
-                  discountPercentageController, TextInputType.number, "Enter the discount percentage" , "Please Enter a value"
-                ),
+                MyTextField(discountPercentageController, TextInputType.number,
+                    "Enter the discount percentage", "Please Enter a value"),
                 SizedBox(
                   height: 0.05 * screenHeight,
                 ),
@@ -177,31 +178,31 @@ class UpdateProductScreenState extends State<UpdateProductScreen> {
                   style: ButtonStyle(
                     backgroundColor: MaterialStateProperty.all(
                         Theme.of(context).primaryColorDark),
-                    textStyle: MaterialStateProperty.all(TextStyle(
-                        color: Theme.of(context).primaryColorLight)),
+                    textStyle: MaterialStateProperty.all(
+                        TextStyle(color: Theme.of(context).primaryColorLight)),
                   ),
                   child: MyText(
                     text: widget.buttonTitle,
                     textScaleFactor: 1.3,
                   ),
                   onPressed: () async {
-                    if(_formKey.currentState!.validate()) {
+                    if (_formKey.currentState!.validate()) {
                       // print(sellingRatePerItemController.text);
                       // print(productNameController.text);
                       // print(productRatePerItemController.text);
                       // print(discountPercentageController.text);
                       // print(quantityController.text);
-                      if(widget.buttonTitle == 'Add'){
+                      if (widget.buttonTitle == 'Add') {
                         addData();
-                      }
-                      else{
+                      } else {
                         editData();
                       }
                       await downloadJSON();
-                      setState(()  {
-                        Navigator.push(context, MaterialPageRoute(builder: (context) {
+                      setState(() {
+                        Navigator.push(context,
+                            MaterialPageRoute(builder: (context) {
                           return TabBarScreen();
-                     }));
+                        }));
                       });
                     }
                   },

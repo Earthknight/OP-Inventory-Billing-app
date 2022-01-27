@@ -74,3 +74,29 @@ COMMIT;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 
+/* TRIGGER TO SET DATA IN NOTIFICATIONS TABLE WHEN STOCK QUANTITY GOES BELOW 10 */
+
+CREATE TRIGGER `after_products_less_than_10` AFTER UPDATE 
+ON `products` 
+FOR EACH ROW 
+IF NEW.productInStock < 10 THEN 
+INSERT INTO notifications VALUES(null, NEW.productId, 'Stock is less than 10', NOW()); 
+END IF;
+
+/* CREATE TABLE QUERY FOR NOTIFICATIONS */
+CREATE TABLE notifications (
+    id int NOT NULL AUTO_INCREMENT,
+    product_id varchar(255) NOT NULL,
+    notification_message varchar(255),
+    notification_date date,
+    PRIMARY KEY (id)
+);
+
+-- $conn->query("CREATE TRIGGER `after_products_less_than_10` AFTER UPDATE 
+-- ON `products` 
+-- FOR EACH ROW 
+-- IF $productInStock < 10 THEN 
+-- INSERT INTO `notifications` VALUES(null, $productInStock, 'Stock is less than 10', NOW()); 
+-- END IF;
+-- ")
+

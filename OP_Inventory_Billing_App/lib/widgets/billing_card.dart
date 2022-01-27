@@ -4,14 +4,14 @@ import 'TextWidget.dart';
 
 class BillingCard extends StatelessWidget {
 
-  final String name;
+  final String itemName;
   final double cost;
   final int discount;
   final String time;
   final int items;
 
-  const BillingCard(
-      {required this.name, required this.cost, required this.discount, required this.time, required this.items});
+   BillingCard(
+      {required this.itemName, required this.cost, required this.discount, required this.time, required this.items});
   @override
 
   Widget build(BuildContext context) {
@@ -26,7 +26,7 @@ class BillingCard extends StatelessWidget {
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                   MyText(text: name,size: 20,fontColor: Colors.black,fontWeight: FontWeight.bold,),
+                   MyText(text: itemName,size: 20,fontColor: Colors.black,fontWeight: FontWeight.bold,),
                 const SizedBox(
                   height: 10,
                 ),

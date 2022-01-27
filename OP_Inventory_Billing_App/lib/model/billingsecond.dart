@@ -8,7 +8,7 @@ import 'dart:convert';
 // List<Billings> billingsFromJson(String str) => List<Billings>.from(json.decode(str).map((x) => Billings.fromJson(x)));
 
 // String billingsToJson(List<Billings> data) => json.encode(List<dynamic>.from(data.map((x) => x.toJson())));
-
+//Billing Second model
 class Billings {
   Billings({
     required this.billingId,

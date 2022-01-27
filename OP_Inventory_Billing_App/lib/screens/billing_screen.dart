@@ -22,7 +22,7 @@ int items = 3;
 int totalcost = 400;
 String Billingid = '00001' ;
 List<dynamic> billing = [];
-
+//
 //This function's purpose was to increment a value by checking last value from database
 Future<List<Billings>> getbillingdata() async {
   const jsonEndpoint = "http://192.168.0.7/products_php_files/getbillingdata.php";

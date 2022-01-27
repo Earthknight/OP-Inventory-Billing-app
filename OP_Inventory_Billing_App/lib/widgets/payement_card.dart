@@ -8,7 +8,7 @@ import 'package:http/http.dart' as http;
 
 
 class PayementCard extends StatefulWidget {
-
+//Payementcard
   // int total = 250;    //Total amount
   final double sellingPrice;
   final double purchasePrice;

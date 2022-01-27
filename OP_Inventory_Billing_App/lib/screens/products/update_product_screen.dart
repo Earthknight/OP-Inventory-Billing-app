@@ -15,7 +15,7 @@ Future<String> getProductId() async {
   var list = await downloadJSON();
   String id = list[list.length - 1].productId.substring(1);
   int idNumber = int.parse(id);
-  print("P${idNumber++}");
+  // print("P${idNumber++}");
   return "P${idNumber++}";
 }
 
@@ -23,7 +23,7 @@ class UpdateProductScreen extends StatefulWidget {
   final String appBarTitle;
   final Product product;
   final String buttonTitle;
-  UpdateProductScreen(
+  const UpdateProductScreen(
       {Key? key,
       required this.appBarTitle,
       required this.product,

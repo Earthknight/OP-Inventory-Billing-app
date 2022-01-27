@@ -125,7 +125,7 @@ class Items extends StatelessWidget {
             width: screenWidth * 0.1,
             // to store all the data of product in the form of QR
             child: QrImage(
-              data: product.productId.toString(),
+              data: "${product.productId}|${product.productName}|${product.productCost}|${product.productInStock}|${product.sellingPrice}|${product.discount}",
               version: QrVersions.auto,
             ),
           ),

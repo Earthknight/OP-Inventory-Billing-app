@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'dart:async';
 import 'package:http/http.dart';
 import 'package:op_inventory_billing_app/model/products/product.dart';
+import 'package:op_inventory_billing_app/screens/products/product_qr_code_detail_screen.dart';
 import 'package:op_inventory_billing_app/screens/products/update_product_screen.dart';
 import 'package:op_inventory_billing_app/widgets/ListTileWidget.dart';
 import 'package:op_inventory_billing_app/widgets/TextWidget.dart';
@@ -13,7 +14,9 @@ double screenWidth = 0.0;
 
 Future<List<Product>> downloadJSON() async {
   // print("download json called");
-  const jsonEndpoint = "http://192.168.174.1/Op/getData.php";
+  // const jsonEndpoint = "http://192.168.174.1/Op/getData.php";
+  const jsonEndpoint =
+      "http://192.168.0.105:80/php_workspace/inventory_app/getData.php";
   final response = await get(Uri.parse(jsonEndpoint));
   if (response.statusCode == 200) {
     List products = json.decode(response.body);
@@ -85,11 +88,14 @@ class Items extends StatelessWidget {
         physics: const ScrollPhysics(),
         itemCount: list.length,
         itemBuilder: (context, int index) {
-          return listItem(list[index]);
+          return listItem(list[index], context);
         });
   }
 
-  Widget listItem(Product product) {
+  Widget listItem(
+    Product product,
+    BuildContext context,
+  ) {
     return Padding(
       padding: EdgeInsets.only(top: screenWidth * 0.015),
       child: Card(
@@ -101,12 +107,24 @@ class Items extends StatelessWidget {
             subtitle: MyText(
               text: "Rs ${product.productCost.toString()}",
             ),
-            leading: SizedBox(
-              height: screenWidth * 0.1,
-              width: screenWidth * 0.1,
-              child: QrImage(
-                data: product.productId.toString(),
-                version: QrVersions.auto,
+            leading: GestureDetector(
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (ctx) => ProductQRCodeDetailScreen(
+                      productId: product.productId.toString(),
+                    ),
+                  ),
+                );
+              },
+              child: SizedBox(
+                height: screenWidth * 0.1,
+                width: screenWidth * 0.1,
+                child: QrImage(
+                  data: product.productId.toString(),
+                  version: QrVersions.auto,
+                ),
               ),
             ),
             trailing: SizedBox(

@@ -10,6 +10,7 @@ import 'package:op_inventory_billing_app/widgets/get_device_size.dart';
 import '../../tab_bar_screen.dart';
 
 int productid = 101;
+
 class UpdateProductScreen extends StatefulWidget {
   const UpdateProductScreen({Key? key}) : super(key: key);
 
@@ -27,13 +28,10 @@ class UpdateProductScreenState extends State<UpdateProductScreen> {
   final _formKey = GlobalKey<FormState>();
 
   TextEditingController productNameController = TextEditingController();
-  TextEditingController productRatePerItemController =
-  TextEditingController();
-  TextEditingController sellingRatePerItemController =
-  TextEditingController();
+  TextEditingController productRatePerItemController = TextEditingController();
+  TextEditingController sellingRatePerItemController = TextEditingController();
   TextEditingController quantityController = TextEditingController();
-  TextEditingController discountPercentageController =
-  TextEditingController();
+  TextEditingController discountPercentageController = TextEditingController();
 
   @override
   void initState() {
@@ -48,18 +46,18 @@ class UpdateProductScreenState extends State<UpdateProductScreen> {
     print("addData called");
     String id = "P${productid++}";
     print("id : $id");
-    var url = "http://192.168.174.1/Op/addData.php";
-  //  var url = "http://192.168.1.107:8080/php_workspace/product/addData.php";
-    await post(Uri.parse(url),body: {
+    // var url = "http://192.168.174.1/Op/addData.php";
+    //  var url = "http://192.168.1.107:8080/php_workspace/product/addData.php";
+    var url = "http://192.168.0.105:80/php_workspace/inventory_app/addData.php";
+    await post(Uri.parse(url), body: {
       "productId": id,
       "productName": productNameController.text,
       "productCost": productRatePerItemController.text,
-      "productInStock":  sellingRatePerItemController.text,
+      "productInStock": sellingRatePerItemController.text,
       "sellingPrice": quantityController.text,
       "discount": discountPercentageController.text
     });
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -101,9 +99,8 @@ class UpdateProductScreenState extends State<UpdateProductScreen> {
                   text: "PRODUCT NAME",
                   size: 3.0,
                 ),
-                MyTextField(
-                 productNameController, TextInputType.text, "Enter the Product name" , "Please Enter a value"
-                ),
+                MyTextField(productNameController, TextInputType.text,
+                    "Enter the Product name", "Please Enter a value"),
                 SizedBox(
                   height: 0.05 * screenHeight,
                 ),
@@ -111,9 +108,8 @@ class UpdateProductScreenState extends State<UpdateProductScreen> {
                   text: "PURCHASE RATE PER ITEM",
                   size: 3.0,
                 ),
-                MyTextField(
-                  productRatePerItemController, TextInputType.number, "Enter the purchase rate per item" , "Please Enter a value"
-                ),
+                MyTextField(productRatePerItemController, TextInputType.number,
+                    "Enter the purchase rate per item", "Please Enter a value"),
                 SizedBox(
                   height: 0.05 * screenHeight,
                 ),
@@ -121,9 +117,8 @@ class UpdateProductScreenState extends State<UpdateProductScreen> {
                   text: "SELLING RATE PER ITEM",
                   size: 3.0,
                 ),
-                MyTextField(
-                  sellingRatePerItemController, TextInputType.number, "Enter the selling rate per item" , "Please Enter a value"
-                ),
+                MyTextField(sellingRatePerItemController, TextInputType.number,
+                    "Enter the selling rate per item", "Please Enter a value"),
                 SizedBox(
                   height: 0.05 * screenHeight,
                 ),
@@ -132,8 +127,10 @@ class UpdateProductScreenState extends State<UpdateProductScreen> {
                   size: 3.0,
                 ),
                 MyTextField(
-                  quantityController, TextInputType.number, "Enter the Quantity of the product" , "Please Enter a value"
-                ),
+                    quantityController,
+                    TextInputType.number,
+                    "Enter the Quantity of the product",
+                    "Please Enter a value"),
                 SizedBox(
                   height: 0.05 * screenHeight,
                 ),
@@ -141,9 +138,8 @@ class UpdateProductScreenState extends State<UpdateProductScreen> {
                   text: "DISCOUNT PERCENTAGE",
                   size: 3.0,
                 ),
-                MyTextField(
-                  discountPercentageController, TextInputType.number, "Enter the discount percentage" , "Please Enter a value"
-                ),
+                MyTextField(discountPercentageController, TextInputType.number,
+                    "Enter the discount percentage", "Please Enter a value"),
                 SizedBox(
                   height: 0.05 * screenHeight,
                 ),
@@ -151,15 +147,15 @@ class UpdateProductScreenState extends State<UpdateProductScreen> {
                   style: ButtonStyle(
                     backgroundColor: MaterialStateProperty.all(
                         Theme.of(context).primaryColorDark),
-                    textStyle: MaterialStateProperty.all(TextStyle(
-                        color: Theme.of(context).primaryColorLight)),
+                    textStyle: MaterialStateProperty.all(
+                        TextStyle(color: Theme.of(context).primaryColorLight)),
                   ),
                   child: MyText(
                     text: "Update",
                     textScaleFactor: 1.3,
                   ),
                   onPressed: () {
-                    if(_formKey.currentState!.validate()){
+                    if (_formKey.currentState!.validate()) {
                       print(sellingRatePerItemController.text);
                       print(productNameController.text);
                       print(productRatePerItemController.text);
@@ -167,11 +163,11 @@ class UpdateProductScreenState extends State<UpdateProductScreen> {
                       print(quantityController.text);
                       setState(() {
                         addData();
-                        Navigator.push(context, MaterialPageRoute(builder: (context) {
+                        Navigator.push(context,
+                            MaterialPageRoute(builder: (context) {
                           return TabBarScreen();
                         }));
                       });
-
                     }
                   },
                 ),

@@ -92,6 +92,13 @@ CREATE TABLE notifications (
     PRIMARY KEY (id)
 );
 
+CREATE TRIGGER `after_products_greater_than_10` AFTER UPDATE 
+ON `products` 
+FOR EACH ROW 
+IF NEW.productInStock >= 10 THEN 
+DELETE FROM notifications WHERE product_id = NEW.productId; 
+END IF;
+
 -- $conn->query("CREATE TRIGGER `after_products_less_than_10` AFTER UPDATE 
 -- ON `products` 
 -- FOR EACH ROW 

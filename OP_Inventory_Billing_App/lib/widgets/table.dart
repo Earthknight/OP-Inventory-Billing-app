@@ -6,7 +6,7 @@ import 'package:op_inventory_billing_app/model/billing.dart';
 
 class SalesTable extends StatefulWidget {
   List<Billing> list;
-  SalesTable({Key? key,required this.list}) : super(key: key);
+  SalesTable({Key? key, required this.list}) : super(key: key);
 
   @override
   SalesTableState createState() => SalesTableState();
@@ -15,10 +15,11 @@ class SalesTable extends StatefulWidget {
 class SalesTableState extends State<SalesTable> {
   final HDTRefreshController _hdtRefreshController = HDTRefreshController();
 
-  static const int sortByBillingId = 0;
+  static const int sortByBillingId =
+      0; //True or false whether to sort by billing id or not
   static const int sortcountProducts = 1;
-  bool isAscending = true;
-  int sortType = sortByBillingId;
+  bool isAscending = true; //ascending order
+  int sortType = sortByBillingId; //Tells how to sort
   double h = 0.0;
   double w = 0.0;
   @override
@@ -28,6 +29,7 @@ class SalesTableState extends State<SalesTable> {
   }
 
   void sortBillingId(bool isAscending) {
+    //A new list is created by sorting according to billing Id
     widget.list.sort((a, b) {
       //Compares items a and b according to the sorting function which we have created in the follwing LOC
       int aId = int.parse(a.billingId);
@@ -37,6 +39,7 @@ class SalesTableState extends State<SalesTable> {
   }
 
   void sortNoOfProducts(bool isAscending) {
+    //A new list is created by sorting according to no of products
     widget.list.sort((a, b) {
       //Compares items a and b according to the sorting function which we have created in the follwing LOC
       int aId = a.items;
@@ -52,14 +55,18 @@ class SalesTableState extends State<SalesTable> {
     w = size.width;
     return Container(
       child: HorizontalDataTable(
+        //Creates table
         leftHandSideColumnWidth: 0.25 * w, //first column only
         rightHandSideColumnWidth: 0.75 * w, //rest of columns
         isFixedHeader: true,
-        headerWidgets: _getTitleWidget(),
-        leftSideItemBuilder: _generateFirstColumnRow,
-        rightSideItemBuilder: _generateRightHandSideColumnRow,
+        headerWidgets: _getTitleWidget(), //For titles widget
+        leftSideItemBuilder:
+            _generateFirstColumnRow, //Only for 1st column widget
+        rightSideItemBuilder:
+            _generateRightHandSideColumnRow, //For rest of columns widget
         itemCount: widget.list.length,
         rowSeparatorWidget: const Divider(
+          //seperate rows using it
           color: Colors.black54,
           height: 1.0,
           thickness: 0.0,
@@ -80,6 +87,7 @@ class SalesTableState extends State<SalesTable> {
         refreshIndicator: const WaterDropHeader(),
         refreshIndicatorHeight: 0.07 * h,
         onRefresh: () async {
+          //refresh mechanism
           //Do sth
           await Future.delayed(const Duration(milliseconds: 500));
           _hdtRefreshController.refreshCompleted();
@@ -104,7 +112,8 @@ class SalesTableState extends State<SalesTable> {
         onPressed: () {
           //print("Height is" + h.toString() + "Width is" + w.toString());
           sortType = sortByBillingId;
-          isAscending = !isAscending;
+          isAscending =
+              !isAscending; //On pressing we change ascending to descending order
           sortBillingId(isAscending);
           setState(() {});
         },
@@ -179,5 +188,3 @@ class SalesTableState extends State<SalesTable> {
     );
   }
 }
-
-

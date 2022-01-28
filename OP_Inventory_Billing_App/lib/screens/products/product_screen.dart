@@ -15,7 +15,7 @@ double screenWidth = 0.0;
 Future<List<Product>> downloadJSON() async {
   print("download json called");
 
-  const jsonEndpoint = "http://192.168.1.102:8080/php_workspace/product/getData.php";
+  const jsonEndpoint = "http://192.168.174.1/Op/getData.php";
   final response = await get(Uri.parse(jsonEndpoint));
   if (response.statusCode == 200) {
     List products = json.decode(response.body);
@@ -58,7 +58,8 @@ class ProductScreenState extends State<ProductScreen> {
                   productName: '',
                   sellingPrice: '',
                   discount: ''),
-            );;
+            );
+            ;
           }));
         },
       ),
@@ -117,12 +118,13 @@ class Items extends StatelessWidget {
             text: "Rs ${product.productCost.toString()}",
           ),
           leading: SizedBox(
-              height: screenWidth * 0.1,
-              width: screenWidth * 0.1,
-              child: QrImage(
-                data: product.productId.toString(),
-                version: QrVersions.auto,
-              ),),
+            height: screenWidth * 0.1,
+            width: screenWidth * 0.1,
+            child: QrImage(
+              data: product.productId.toString(),
+              version: QrVersions.auto,
+            ),
+          ),
           trailing: SizedBox(
               height: screenWidth * 0.1,
               width: screenWidth * 0.1,

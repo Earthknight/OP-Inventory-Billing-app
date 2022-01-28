@@ -3,20 +3,26 @@ import 'package:flutter/material.dart';
 import 'dart:async';
 import 'package:http/http.dart';
 import 'package:op_inventory_billing_app/model/products/product.dart';
+import 'package:op_inventory_billing_app/screens/products/product_screen.dart';
 import 'package:op_inventory_billing_app/widgets/TextFieldWidget.dart';
 import 'package:op_inventory_billing_app/widgets/TextWidget.dart';
 import 'package:op_inventory_billing_app/widgets/get_device_size.dart';
 
 import '../../tab_bar_screen.dart';
 
-int productid = 101;
-
+Future<String> getProductId() async {
+  var list = await downloadJSON();
+  String id  = list[list.length-1].productId.substring(1);
+  int idNumber = int.parse(id);
+  print("P${idNumber++}");
+  return "P${idNumber++}";
+}
 class UpdateProductScreen extends StatefulWidget {
-  const UpdateProductScreen({Key? key}) : super(key: key);
 
-  // final String appBarTitle;
-  // final Product product;
-  // const UpdateProductScreen({Key? key, required this.appBarTitle, required this.product}) : super(key: key);
+  final String appBarTitle;
+  final Product product;
+  final String buttonTitle;
+  const UpdateProductScreen({Key? key, required this.appBarTitle, required this.product, required this.buttonTitle}) : super(key: key);
 
   @override
   State<StatefulWidget> createState() => UpdateProductScreenState();
@@ -35,26 +41,40 @@ class UpdateProductScreenState extends State<UpdateProductScreen> {
 
   @override
   void initState() {
-    // productNameController = widget.product.productName as TextEditingController;
-    // productRatePerItemController = widget.product.productCost as TextEditingController;
-    // sellingRatePerItemController = widget.product.sellingPrice as TextEditingController;
-    // quantityController = widget.product.productInStock as TextEditingController;
-    // discountPercentageController = widget.product.discount as TextEditingController;
+    productNameController.text = widget.product.productName;
+    productRatePerItemController.text = widget.product.productCost;
+    sellingRatePerItemController.text = widget.product.sellingPrice;
+    quantityController.text = widget.product.productInStock;
+    discountPercentageController.text = widget.product.discount!;
   }
 
   void addData() async {
     print("addData called");
-    String id = "P${productid++}";
-    print("id : $id");
+    var productId = await getProductId();
+    // print("addData called");
+    String id = productId;
     // var url = "http://192.168.174.1/Op/addData.php";
-    //  var url = "http://192.168.1.107:8080/php_workspace/product/addData.php";
-    var url = "http://192.168.0.105:80/php_workspace/inventory_app/addData.php";
+     var url = "http://192.168.1.102:8080/php_workspace/product/addData.php";
+    // var url = "http://192.168.0.105:80/php_workspace/inventory_app/addData.php";
     await post(Uri.parse(url), body: {
       "productId": id,
       "productName": productNameController.text,
       "productCost": productRatePerItemController.text,
       "productInStock": sellingRatePerItemController.text,
       "sellingPrice": quantityController.text,
+      "discount": discountPercentageController.text
+    });
+  }
+  void editData() async {
+    print("editData called");
+    // var url = "http://192.168.174.1/Op/addData.php";
+    var url = "http://192.168.1.102:8080/php_workspace/product/editData.php";
+    await post(Uri.parse(url),body: {
+      "productId": widget.product.productId,
+      "productName": productNameController.text,
+      "productCost": productRatePerItemController.text,
+      "productInStock":  quantityController.text,
+      "sellingPrice": sellingRatePerItemController.text,
       "discount": discountPercentageController.text
     });
   }
@@ -72,9 +92,9 @@ class UpdateProductScreenState extends State<UpdateProductScreen> {
           icon: Icon(Icons.arrow_back, color: Colors.black),
           onPressed: () => Navigator.of(context).pop(),
         ),
-        title: const Center(
+        title: Center(
           child: MyText(
-            text: "Update Product",
+            text: widget.appBarTitle,
             fontWeight: FontWeight.bold,
             size: 10.0,
           ),
@@ -154,7 +174,14 @@ class UpdateProductScreenState extends State<UpdateProductScreen> {
                     text: "Update",
                     textScaleFactor: 1.3,
                   ),
-                  onPressed: () {
+                  onPressed: () async {
+                    if(widget.buttonTitle == 'Add'){
+                      addData();
+                    }
+                    else{
+                      editData();
+                    }
+                    await downloadJSON();
                     if (_formKey.currentState!.validate()) {
                       print(sellingRatePerItemController.text);
                       print(productNameController.text);
@@ -162,7 +189,6 @@ class UpdateProductScreenState extends State<UpdateProductScreen> {
                       print(discountPercentageController.text);
                       print(quantityController.text);
                       setState(() {
-                        addData();
                         Navigator.push(context,
                             MaterialPageRoute(builder: (context) {
                           return TabBarScreen();

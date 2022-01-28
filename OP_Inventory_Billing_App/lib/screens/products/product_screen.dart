@@ -13,14 +13,13 @@ import 'package:qr_flutter/qr_flutter.dart';
 double screenWidth = 0.0;
 
 Future<List<Product>> downloadJSON() async {
-  // print("download json called");
-  // const jsonEndpoint = "http://192.168.174.1/Op/getData.php";
-  const jsonEndpoint =
-      "http://192.168.0.105:80/php_workspace/inventory_app/getData.php";
+  print("download json called");
+
+  const jsonEndpoint = "http://192.168.1.102:8080/php_workspace/product/getData.php";
   final response = await get(Uri.parse(jsonEndpoint));
   if (response.statusCode == 200) {
     List products = json.decode(response.body);
-    // print(products);
+    print(products);
     return products.map((product) => Product.fromJson(product)).toList();
   } else {
     throw Exception('We were not able to successfully download the json data.');
@@ -49,7 +48,17 @@ class ProductScreenState extends State<ProductScreen> {
         backgroundColor: Colors.black,
         onPressed: () {
           Navigator.push(context, MaterialPageRoute(builder: (context) {
-            return UpdateProductScreen();
+            return UpdateProductScreen(
+              buttonTitle: 'Add',
+              appBarTitle: "Add a new product",
+              product: Product(
+                  productId: '',
+                  productCost: '',
+                  productInStock: '',
+                  productName: '',
+                  sellingPrice: '',
+                  discount: ''),
+            );;
           }));
         },
       ),
@@ -101,44 +110,40 @@ class Items extends StatelessWidget {
       child: Card(
         elevation: 5.0,
         child: MyListTile(
-            title: MyText(
-              text: product.productName.toString(),
-            ),
-            subtitle: MyText(
-              text: "Rs ${product.productCost.toString()}",
-            ),
-            leading: GestureDetector(
-              onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (ctx) => ProductQRCodeDetailScreen(
-                      productId: product.productId.toString(),
-                    ),
-                  ),
-                );
-              },
-              child: SizedBox(
-                height: screenWidth * 0.1,
-                width: screenWidth * 0.1,
-                child: QrImage(
-                  data: product.productId.toString(),
-                  version: QrVersions.auto,
-                ),
-              ),
-            ),
-            trailing: SizedBox(
+          title: MyText(
+            text: product.productName.toString(),
+          ),
+          subtitle: MyText(
+            text: "Rs ${product.productCost.toString()}",
+          ),
+          leading: SizedBox(
+              height: screenWidth * 0.1,
+              width: screenWidth * 0.1,
+              child: QrImage(
+                data: product.productId.toString(),
+                version: QrVersions.auto,
+              ),),
+          trailing: SizedBox(
               height: screenWidth * 0.1,
               width: screenWidth * 0.1,
               child: Card(
                 elevation: 5.0,
                 child: Center(
                   child: MyText(
-                    text: product.productCost.toString(),
+                    text: product.productInStock.toString(),
                   ),
                 ),
-              ),
-            )),
+              )),
+          ontap: () {
+            Navigator.push(context, MaterialPageRoute(builder: (context) {
+              return UpdateProductScreen(
+                buttonTitle: 'Update',
+                appBarTitle: "Update ${product.productName}",
+                product: product,
+              );
+            }));
+          },
+        ),
       ),
     );
   }

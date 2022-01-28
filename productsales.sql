@@ -107,3 +107,22 @@ END IF;
 -- END IF;
 -- ")
 
+-- Query to create table for billing cart which stores multiple product items in billing state
+
+CREATE TABLE billing_cart (
+    id int NOT NULL AUTO_INCREMENT,
+    product_id varchar(255) NOT NULL,
+    quantity int,
+    PRIMARY KEY (id)
+);
+
+-- Query to insert dummy data int the billing cart table
+INSERT INTO billing_cart VALUES(null, 'P102', 25); 
+
+-- JUST A BASIC TRIGGER QUERY ... NEEDS TO BE UPDATED AS THE BILLING TABLES GETS FUNCTIONING
+-- CREATE TRIGGER `after_billing_products` AFTER INSERT 
+-- ON `billing` 
+-- FOR EACH ROW 
+-- UPDATE FROM products WHERE product_id = NEW.product_id; 
+-- END IF;
+

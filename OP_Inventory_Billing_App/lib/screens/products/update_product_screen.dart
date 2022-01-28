@@ -59,8 +59,8 @@ class UpdateProductScreenState extends State<UpdateProductScreen> {
     // print("addData called");
     String id = productId;
     // var url = "http://192.168.174.1/Op/addData.php";
-    var url = "http://192.168.174.1/Op/addData.php";
-    // var url = "http://192.168.0.105:80/php_workspace/inventory_app/addData.php";
+    // var url = "http://192.168.174.1/Op/addData.php";
+    var url = "http://192.168.0.105:80/php_workspace/inventory_app/addData.php";
     await post(Uri.parse(url), body: {
       "productId": id,
       "productName": productNameController.text,
@@ -74,7 +74,8 @@ class UpdateProductScreenState extends State<UpdateProductScreen> {
   void editData() async {
     print("editData called");
     // var url = "http://192.168.174.1/Op/addData.php";
-    var url = "http://192.168.174.1/Op/editData.php";
+    var url =
+        "http://192.168.0.105:80/php_workspace/inventory_app/editData.php";
     await post(Uri.parse(url), body: {
       "productId": widget.product.productId,
       "productName": productNameController.text,

@@ -15,7 +15,9 @@ double screenWidth = 0.0;
 Future<List<Product>> downloadJSON() async {
   print("download json called");
 
-  const jsonEndpoint = "http://192.168.174.1/Op/getData.php";
+  // const jsonEndpoint = "http://192.168.174.1/Op/getData.php";
+  const jsonEndpoint =
+      "http://192.168.0.105:80/php_workspace/inventory_app/getData.php";
   final response = await get(Uri.parse(jsonEndpoint));
   if (response.statusCode == 200) {
     List products = json.decode(response.body);

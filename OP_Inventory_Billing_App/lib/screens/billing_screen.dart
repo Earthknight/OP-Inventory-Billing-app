@@ -34,8 +34,33 @@ String Billingid = '00001';
 
 List productsmap = [];
 
+// logic for adding data in billing table after successful billing
+
+// step 1: store details in a list of map or as a single variable values importantly containing product id and quantity
+// step 2: pass it as a post request to php file where the insert query is gonna happen
+// step 3: in php file use loops for length of number of product ids and insert into billing table
+// step 4: use triggers to deduct product quantity for each product after billing
+
+// function to fetch the products id which are present in billing cart table
+Future<void> fetchProductIds() async {
+  var url = Uri.parse(
+      "http://192.168.0.105:80/php_workspace/inventory_app/fetch_product_ids.php");
+  final response = await get(url);
+  if (response.statusCode == 200) {
+    // gets the list of maps containing data of product id and its quantity
+    // after getting the data we can show this on UI
+    List productsIds = json.decode(response.body);
+    print(productsIds);
+    // return products.map((product) => Product.fromJson(product)).toList();
+  } else {
+    throw Exception('We were not able to successfully download the json data.');
+  }
+}
+
 Future<List<Product>> fetchProdata() async {
-  var url = Uri.parse("http://192.168.174.1/Op/fetchselectedproducts.php");
+  // var url = Uri.parse("http://192.168.174.1/Op/fetchselectedproducts.php");
+  var url = Uri.parse(
+      "http://192.168.0.105:80/php_workspace/inventory_app/fetchselectedproducts.php");
   var response = await http.post(url, body: {
     "productId":
         "P101", //insertdata function in database refer inserbilling.php file
@@ -69,6 +94,7 @@ class _BillingState extends State<BillingScreen> {
 
   void initState() {
     super.initState();
+    // fetchProductIds();
   }
 
   @override

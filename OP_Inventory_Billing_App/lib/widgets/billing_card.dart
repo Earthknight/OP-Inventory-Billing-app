@@ -4,11 +4,11 @@ import 'TextWidget.dart';
 
 class BillingCard extends StatelessWidget {
 
-  final String itemName;
-  final double cost;
-  final int discount;
-  final String time;
-  final int items;
+  final String  itemName;
+  final double ? cost;
+  final int ? discount;
+  final String  time;
+  final int ? items;
 
    BillingCard(
       {required this.itemName, required this.cost, required this.discount, required this.time, required this.items});
@@ -32,14 +32,13 @@ class BillingCard extends StatelessWidget {
                 ),
                 Row(
                   children:  [
-                    MyText(text: "Rs " + cost.toString(),size: 14,fontColor: Colors.black,fontWeight: FontWeight.bold,),
+                    MyText(text: "Rs " + (cost! - (cost! * discount!/100)).toString(),size: 14,fontColor: Colors.black,fontWeight: FontWeight.bold,),
                        Padding(
                       padding: EdgeInsets.only(top: 0.00 * h,left: 0.02 * w),
                       child: MyText(text: discount.toString() + "%",size: 1,fontColor: Colors.red),
                     ),
                   ],
                 ),
-
                 const SizedBox(
                   height: 10,
                 ),MyText(text: time,size: -1,fontColor: Colors.grey),

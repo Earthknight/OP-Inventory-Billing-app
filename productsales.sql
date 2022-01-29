@@ -74,6 +74,8 @@ COMMIT;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 
+-- ***************************************************************************************************
+
 /* TRIGGER TO SET DATA IN NOTIFICATIONS TABLE WHEN STOCK QUANTITY GOES BELOW 10 */
 
 CREATE TRIGGER `after_products_less_than_10` AFTER UPDATE 
@@ -82,6 +84,8 @@ FOR EACH ROW
 IF NEW.productInStock < 10 THEN 
 INSERT INTO notifications VALUES(null, NEW.productId, 'Stock is less than 10', NOW()); 
 END IF;
+
+-- ***************************************************************************************************
 
 /* CREATE TABLE QUERY FOR NOTIFICATIONS */
 CREATE TABLE notifications (
@@ -92,12 +96,16 @@ CREATE TABLE notifications (
     PRIMARY KEY (id)
 );
 
+-- ***************************************************************************************************
+
 CREATE TRIGGER `after_products_greater_than_10` AFTER UPDATE 
 ON `products` 
 FOR EACH ROW 
 IF NEW.productInStock >= 10 THEN 
 DELETE FROM notifications WHERE product_id = NEW.productId; 
 END IF;
+
+-- ***************************************************************************************************
 
 -- $conn->query("CREATE TRIGGER `after_products_less_than_10` AFTER UPDATE 
 -- ON `products` 
@@ -106,6 +114,8 @@ END IF;
 -- INSERT INTO `notifications` VALUES(null, $productInStock, 'Stock is less than 10', NOW()); 
 -- END IF;
 -- ")
+
+-- ***************************************************************************************************
 
 -- Query to create table for billing cart which stores multiple product items in billing state
 
@@ -116,8 +126,12 @@ CREATE TABLE billing_cart (
     PRIMARY KEY (id)
 );
 
+-- ***************************************************************************************************
+
 -- Query to insert dummy data int the billing cart table
 INSERT INTO billing_cart VALUES(null, 'P102', 25); 
+
+-- ***************************************************************************************************
 
 -- JUST A BASIC TRIGGER QUERY ... NEEDS TO BE UPDATED AS THE BILLING TABLES GETS FUNCTIONING
 -- CREATE TRIGGER `after_billing_products` AFTER INSERT 
@@ -126,3 +140,22 @@ INSERT INTO billing_cart VALUES(null, 'P102', 25);
 -- UPDATE FROM products WHERE product_id = NEW.product_id; 
 -- END IF;
 
+-- ***************************************************************************************************
+
+-- BASIC TRIGGER TO REMOVE ROWS FROM BILLING CART AFTER SUCCESSFUL BILLING
+
+-- CREATE TRIGGER `after_insert_billing` AFTER INSERT 
+-- ON `billing` 
+-- FOR EACH ROW 
+-- DELETE FROM billing_cart WHERE product_id = NEW.productId; 
+
+-- ***************************************************************************************************
+
+-- BASIC TRIGGER TO UPDATE PRODUCT FROM PRODUCTS TABLE AFTER SUCCESSFUL BILLING
+
+-- CREATE TRIGGER `update_product_after_billing` AFTER INSERT 
+-- ON `billing` 
+-- FOR EACH ROW 
+-- UPDATE FROM products WHERE product_id = NEW.productId;
+
+-- ***************************************************************************************************

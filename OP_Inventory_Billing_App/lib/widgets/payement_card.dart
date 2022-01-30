@@ -1,7 +1,6 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:op_inventory_billing_app/model/billingsecond.dart';
-import 'package:op_inventory_billing_app/screens/billing_screen.dart';
 import '../tab_bar_screen.dart';
 import 'TextWidget.dart';
 import 'package:http/http.dart' as http;
@@ -36,13 +35,24 @@ class PayementCard extends StatefulWidget {
 
 class _PayementCardState extends State<PayementCard> {
 
-
   String get Taxnumber {
     var list = List.generate(50, (index) => index + 1)..shuffle();    //get function to get taxnumber
     return list.take(5).join('');
   }
 
-
+  // Future<void> deletedata() async {
+  //   var url = Uri.parse("http://192.168.0.7/products_php_files/deleteselectedproducts.php");
+  //   var response = await http.get(url);
+  //   if(response.statusCode == 200){
+  //     productsmap = json.decode(response.body);
+  //     if(response.body.isEmpty) {
+  //       fetchProdata();
+  //       json.decode(response.body);
+  //     }
+  //   }else{
+  //     throw Exception('Failed.');
+  //   }
+  // }
 
   String BillingIdnew (List<Billings> l){
     if(l.isEmpty){
@@ -125,6 +135,7 @@ class _PayementCardState extends State<PayementCard> {
                   ),
                     onPressed: () {
                       insertData(snapshot.data ?? []);
+                      // deletedata();
                       Navigator.of(context, rootNavigator: true).push(
                         MaterialPageRoute(builder: (context) =>  TabBarScreen()),
                       );//calls insertdata and increments a

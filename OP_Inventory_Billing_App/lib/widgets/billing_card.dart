@@ -8,7 +8,7 @@ class BillingCard extends StatelessWidget {
   final double ? cost;
   final int ? discount;
   final String  time;
-  final int ? items;
+  final String items;
 
    BillingCard(
       {required this.itemName, required this.cost, required this.discount, required this.time, required this.items});
@@ -70,9 +70,9 @@ class BillingCard extends StatelessWidget {
                     width: 1,
                   )),
               child:  Center(
-                child:  MyText(text: items.toString(),size: 18,fontColor: Colors.black,fontWeight: FontWeight.bold,),
+                child:  MyText(text: items,size: 10,fontColor: Colors.black,fontWeight: FontWeight.bold,lines: 3,),
               ),
-              padding: EdgeInsets.all(w/14),
+              padding: EdgeInsets.all(w/18),
             )
           ],
         ),

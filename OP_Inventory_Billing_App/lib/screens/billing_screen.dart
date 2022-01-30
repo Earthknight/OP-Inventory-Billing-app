@@ -2,10 +2,60 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:http/http.dart';
-import 'package:op_inventory_billing_app/model/billingsecond.dart';
 import 'package:op_inventory_billing_app/model/products/product.dart';
 import '../widgets/billing_card.dart';
 import '../widgets/payement_card.dart';
+
+List productsmap = [];
+List productsmapsecond = [];
+List productsIDs = [];
+List productsQuantity = [];
+
+Future<void> fetchProductIds() async {
+  var url = Uri.parse(
+      "http://192.168.0.7/products_php_files/fetchbillingid.php");
+  final response = await get(url);
+  if (response.statusCode == 200) {
+    // gets the list of maps containing data of product id and its quantity
+    // after getting the data we can show this on UI
+    List productsIds = json.decode(response.body);
+    print(productsIds);
+    for(int i = 0;i < productsIds.length;i++){
+      if(productsIDs.contains(productsIds[i]['product_id'])){
+      }else{
+        productsIDs.add(productsIds[i]['product_id']);
+        productsQuantity.add(productsIds[i]['quantity']);
+        print(productsIDs);
+      }
+    }
+    // return products.map((product) => Product.fromJson(product)).toList();
+  } else {
+    throw Exception('No data found.');
+  }
+}
+
+
+Future<List<Product>> fetchProdata2() async {
+  var url = Uri.parse("http://192.168.0.7/products_php_files/fetchselectedproducts.php");
+  for(int i = 0;i < productsIDs.length;i++){
+    var response = await http.post(url, body: {
+      "productId": productsIDs[i].toString(),                          //insertdata function in database refer inserbilling.php file
+    });
+    if(response.statusCode == 200){
+      productsmapsecond.add(json.decode(response.body));
+      // if(response.body.isEmpty) {
+      //   fetchProdata();
+      //   json.decode(response.body);
+      // }
+      print(productsmapsecond);
+      print(productsmapsecond.length);
+    }
+    else{
+      throw Exception('We were not able to successfully download the json data.');
+    }
+  }
+  return productsmapsecond.map((product)  => Product.fromJson(product[0])).toList();
+}
 
 class BillingScreen extends StatefulWidget {
   const BillingScreen({Key? key}) : super(key: key);
@@ -13,41 +63,13 @@ class BillingScreen extends StatefulWidget {
   _BillingState createState() => _BillingState();
 }
 
-//dummy data which will be used in Billing card and Payment card
-
-String itemName = 'Banana';
-int discount = 1;
-double singleSellingCost = 0;
-double totalPurchasePrice = 0;
-double discountPrice = (singleSellingCost - (singleSellingCost * discount/100)); //price logic when discount is applied
-double totalSellingCost = discountPrice;
-String time = DateTime.now().toString();
-int items = 3;
-int totalcost = 400;
-String Billingid = '00001' ;
-
 //
 //This function's purpose was to increment a value by checking last value from database
 
+double totalPurchasePrice = 0;
+double totalSellingCost = 0;
+String time = DateTime.now().toString();
 
-List productsmap = [];
-
-Future<List<Product>> fetchProdata() async {
-  var url = Uri.parse("http://192.168.0.7/products_php_files/fetchproducts.php");
-  var response = await http.post(url, body: {
-    "productId": "P101",                          //insertdata function in database refer inserbilling.php file
-  });
-  if(response.statusCode == 200){
-    productsmap = json.decode(response.body);
-    if(response.body.isEmpty) {
-      fetchProdata();
-      json.decode(response.body);
-    }
-    return productsmap.map((product) => Product.fromJson(product)).toList();
-  }else{
-    throw Exception('We were not able to successfully download the json data.');
-  }
-}
 
 class _BillingState extends State<BillingScreen> {
   void calculate(List<Product> list) {
@@ -60,43 +82,49 @@ class _BillingState extends State<BillingScreen> {
     totalPurchasePrice = purchase;
     totalSellingCost = selling;
   }
+  void dispose() {
+    List productsQuantity = [];
+    productsmapsecond = [];
+    productsIDs = [];
+    productsmap = [];
+    print("deleted");
+    super.dispose();
+  }
+
   void initState(){
+    productsmapsecond = [];
+    fetchProductIds();
     super.initState();
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Container(
-        child: Column(
-          children: [
-            Expanded(
-              child: Container(
-                height: 560,
-                width: double.infinity,
-                child: FutureBuilder<List<Product>>(
-                  future: fetchProdata(),
-                  builder: (context, snapshot) {
-                    List<dynamic> billinglist = snapshot.data ?? [];
-                    return ListView.builder(
-                        itemCount: billinglist.length, itemBuilder:(BuildContext context, int index) {
-                          // print(productsid);
-                          //sellingPrice
-                          return BillingCard(cost: double.parse(billinglist[index].sellingPrice), time: time, discount: int.parse(billinglist[index].discount), itemName: billinglist[index].productName, items: int.parse(billinglist[index].productInStock),);
-                    });
-                  }
+      body: FutureBuilder<List<Product>>(
+          future: fetchProdata2(),
+        builder: (context, snapshot) {
+          List<dynamic> billinglist = snapshot.data ?? [];
+          List<Product> productid = snapshot.data ?? [];
+          calculate(productid);
+          return Container(
+            child: Column(
+              children: [
+                Expanded(
+                  child: Container(
+                    height: 560,
+                    width: double.infinity,
+                    child: ListView.builder(
+                            itemCount: billinglist.length, itemBuilder:(BuildContext context, int index) {
+                              //sellingPrice
+                              return BillingCard(cost: double.parse(billinglist[index].sellingPrice), time: time, discount: int.parse(billinglist[index].discount), itemName: billinglist[index].productName, items: productsQuantity[index],);
+                        }),
+                  ),
                 ),
-              ),
+             PayementCard(time:time,items:productid.length, sellingPrice: totalSellingCost, purchasePrice: totalPurchasePrice, discount: 1,),
+              ],
             ),
-            FutureBuilder<List<Product>>(
-              future: fetchProdata(),
-              builder: (BuildContext context, snapshot,) {
-                List<Product> productid = snapshot.data ?? [];
-                calculate(productid);
-                return PayementCard(time:time,items:productid.length, sellingPrice: totalSellingCost, purchasePrice: totalPurchasePrice, discount: discount,);
-              }
-            ),
-          ],
-        ),
+          );
+        }
       ),
     );
   }

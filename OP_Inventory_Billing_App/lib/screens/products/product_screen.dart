@@ -15,7 +15,9 @@ double screenWidth = 0.0;
 Future<List<Product>> downloadJSON() async {
   // print("download json called");
 
-  const jsonEndpoint = "http://192.168.1.109:8080/php_workspace/product/getData.php";
+  // const jsonEndpoint = "http://192.168.1.109:8080/php_workspace/product/getData.php";
+  const jsonEndpoint =
+      "http://192.168.0.105:80/php_workspace/inventory_app/getData.php";
   final response = await get(Uri.parse(jsonEndpoint));
   if (response.statusCode == 200) {
     List products = json.decode(response.body);
@@ -58,7 +60,8 @@ class ProductScreenState extends State<ProductScreen> {
                   productName: '',
                   sellingPrice: '',
                   discount: ''),
-            );;
+            );
+            ;
           }));
         },
       ),
@@ -111,24 +114,10 @@ class Items extends StatelessWidget {
         elevation: 5.0,
         child: MyListTile(
           title: GestureDetector(
-            child: MyText(
-              text: product.productName.toString(),
-            ),
-            onTap: (){
-              Navigator.push(context, MaterialPageRoute(builder: (context) {
-                return UpdateProductScreen(
-                  buttonTitle: 'Update',
-                  appBarTitle: "Update ${product.productName}",
-                  product: product,
-                );
-              }));
-            }
-          ),
-          subtitle: GestureDetector(
-            child: MyText(
-              text: "Rs ${product.productCost.toString()}",
-            ),
-              onTap: (){
+              child: MyText(
+                text: product.productName.toString(),
+              ),
+              onTap: () {
                 Navigator.push(context, MaterialPageRoute(builder: (context) {
                   return UpdateProductScreen(
                     buttonTitle: 'Update',
@@ -136,32 +125,53 @@ class Items extends StatelessWidget {
                     product: product,
                   );
                 }));
-              }
-          ),
+              }),
+          subtitle: GestureDetector(
+              child: MyText(
+                text: "Rs ${product.productCost.toString()}",
+              ),
+              onTap: () {
+                Navigator.push(context, MaterialPageRoute(builder: (context) {
+                  return UpdateProductScreen(
+                    buttonTitle: 'Update',
+                    appBarTitle: "Update ${product.productName}",
+                    product: product,
+                  );
+                }));
+              }),
           leading: GestureDetector(
             child: SizedBox(
-                height: screenWidth * 0.1,
-                width: screenWidth * 0.1,
-                child: QrImage(
-                  data: product.productId.toString(),
-                  version: QrVersions.auto,
-                ),),
-                onTap: (){}
-              ,
+              height: screenWidth * 0.1,
+              width: screenWidth * 0.1,
+              child: QrImage(
+                data: product.productId.toString(),
+                version: QrVersions.auto,
+              ),
+            ),
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (ctx) => ProductQRCodeDetailScreen(
+                    productId: product.productId.toString(),
+                  ),
+                ),
+              );
+            },
           ),
           trailing: GestureDetector(
-            child: SizedBox(
-                height: screenWidth * 0.1,
-                width: screenWidth * 0.1,
-                child: Card(
-                  elevation: 5.0,
-                  child: Center(
-                    child: MyText(
-                      text: product.productInStock.toString(),
+              child: SizedBox(
+                  height: screenWidth * 0.1,
+                  width: screenWidth * 0.1,
+                  child: Card(
+                    elevation: 5.0,
+                    child: Center(
+                      child: MyText(
+                        text: product.productInStock.toString(),
+                      ),
                     ),
-                  ),
-                )),
-              onTap: (){
+                  )),
+              onTap: () {
                 Navigator.push(context, MaterialPageRoute(builder: (context) {
                   return UpdateProductScreen(
                     buttonTitle: 'Update',
@@ -169,8 +179,7 @@ class Items extends StatelessWidget {
                     product: product,
                   );
                 }));
-              }
-          ),
+              }),
           // ontap: () {
           //   Navigator.push(context, MaterialPageRoute(builder: (context) {
           //     return UpdateProductScreen(

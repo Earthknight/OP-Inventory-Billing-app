@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:http/http.dart';
 import 'package:op_inventory_billing_app/widgets/TextFieldWidget.dart';
 import 'package:op_inventory_billing_app/widgets/TextWidget.dart';
 import 'package:op_inventory_billing_app/widgets/get_device_size.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 
-class ProductQRCodeDetailScreen extends StatelessWidget {
+final quantityTextEditingController = TextEditingController();
+
+class ProductQRCodeDetailScreen extends StatefulWidget {
   const ProductQRCodeDetailScreen({
     Key? key,
     required this.productId,
@@ -13,9 +16,24 @@ class ProductQRCodeDetailScreen extends StatelessWidget {
   final String productId;
 
   @override
+  State<ProductQRCodeDetailScreen> createState() =>
+      _ProductQRCodeDetailScreenState();
+}
+
+class _ProductQRCodeDetailScreenState extends State<ProductQRCodeDetailScreen> {
+  Future<void> addBillingItemInCart(int productQuantity) async {
+    var url =
+        "http://192.168.0.105:80/php_workspace/inventory_app/add_product_item_in_billing.php";
+    await post(Uri.parse(url), body: {
+      "product_id": widget.productId,
+      "product_quantity": productQuantity.toString(),
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
     final deviceSize = GetDeviceSize.getDeviceSize(context);
-    final quantityTextEditingController = TextEditingController();
+    // final quantityTextEditingController = TextEditingController();
     return Scaffold(
       appBar: AppBar(
         title: const Text(
@@ -43,7 +61,7 @@ class ProductQRCodeDetailScreen extends StatelessWidget {
                 height: deviceSize.height * 0.45,
                 width: deviceSize.width * 0.6,
                 child: QrImage(
-                  data: productId,
+                  data: widget.productId,
                   version: QrVersions.auto,
                 ),
               ),
@@ -54,11 +72,26 @@ class ProductQRCodeDetailScreen extends StatelessWidget {
               SizedBox(
                 height: deviceSize.height * 0.005,
               ),
+              // Padding(
+              //   padding: const EdgeInsets.all(15),
+              //   child: TextField(
+              //     controller: quantityTextEditingController,
+              //     keyboardType: TextInputType.number,
+              //     decoration: const InputDecoration(
+              //       border: OutlineInputBorder(),
+              //       labelText: 'Enter the Quantity',
+              //       hintText: 'Please Enter a value',
+              //     ),
+              //   ),
+              // ),
               MyTextField(
                 quantityTextEditingController,
-                TextInputType.number,
+                TextInputType.text,
+                // decoration: const InputDecoration(
+                //   border: InputBorder.none,
                 'Enter the Quantity',
                 'Please Enter a value',
+                // ),
               ),
               SizedBox(
                 height: deviceSize.height * 0.025,
@@ -69,7 +102,13 @@ class ProductQRCodeDetailScreen extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
                     RaisedButton(
-                      onPressed: () {},
+                      onPressed: () {
+                        print(quantityTextEditingController.text);
+                        addBillingItemInCart(
+                          int.parse(quantityTextEditingController.text),
+                        );
+                        Navigator.of(context).pop();
+                      },
                       child: Container(
                         padding: const EdgeInsets.all(15),
                         width: deviceSize.width * 0.3,

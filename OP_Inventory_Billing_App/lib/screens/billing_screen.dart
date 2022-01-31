@@ -12,15 +12,17 @@ List productsIDs = [];
 List productsQuantity = [];
 
 Future<void> fetchProductIds() async {
+  // var url = Uri.parse(
+  //     "http://192.168.0.7/products_php_files/fetchbillingid.php");
   var url = Uri.parse(
-      "http://192.168.0.7/products_php_files/fetchbillingid.php");
+      "http://192.168.0.105:80/php_workspace/inventory_app/fetch_product_ids.php");
   final response = await get(url);
   if (response.statusCode == 200) {
     List productsIds = json.decode(response.body);
     print(productsIds);
-    for(int i = 0;i < productsIds.length;i++){
-      if(productsIDs.contains(productsIds[i]['product_id'])){
-      }else{
+    for (int i = 0; i < productsIds.length; i++) {
+      if (productsIDs.contains(productsIds[i]['product_id'])) {
+      } else {
         productsIDs.add(productsIds[i]['product_id']);
         productsQuantity.add(productsIds[i]['quantity']);
         print(productsIDs);
@@ -31,14 +33,16 @@ Future<void> fetchProductIds() async {
   }
 }
 
-
 Future<List<Product>> fetchProdata2() async {
-  var url = Uri.parse("http://192.168.0.7/products_php_files/fetchselectedproducts.php");
-  for(int i = 0;i < productsIDs.length;i++){
+  // var url = Uri.parse(
+  //     "http://192.168.0.7/products_php_files/fetchselectedproducts.php");
+  var url = Uri.parse(
+      "http://192.168.0.105:80/php_workspace/inventory_app/fetchselectedproducts.php");
+  for (int i = 0; i < productsIDs.length; i++) {
     var response = await http.post(url, body: {
-      "productId": productsIDs[i].toString(),                          
+      "productId": productsIDs[i].toString(),
     });
-    if(response.statusCode == 200){
+    if (response.statusCode == 200) {
       productsmapsecond.add(json.decode(response.body));
       // if(response.body.isEmpty) {
       //   fetchProdata();
@@ -46,12 +50,14 @@ Future<List<Product>> fetchProdata2() async {
       // }
       print(productsmapsecond);
       print(productsmapsecond.length);
-    }
-    else{
-      throw Exception('We were not able to successfully download the json data.');
+    } else {
+      throw Exception(
+          'We were not able to successfully download the json data.');
     }
   }
-  return productsmapsecond.map((product)  => Product.fromJson(product[0])).toList();
+  return productsmapsecond
+      .map((product) => Product.fromJson(product[0]))
+      .toList();
 }
 
 class BillingScreen extends StatefulWidget {
@@ -67,19 +73,21 @@ double totalPurchasePrice = 0;
 double totalSellingCost = 0;
 String time = DateTime.now().toString();
 
-
-
 class _BillingState extends State<BillingScreen> {
   void calculate(List<Product> list) {
     double purchase = 0.0;
     double selling = 0.0;
     for (int i = 0; i < list.length; i++) {
       purchase += double.parse(list[i].productCost);
-      selling += (double.parse(list[i].sellingPrice) - (double.parse(list[i].sellingPrice) * int.parse(list[i].discount!)/100));
+      selling += (double.parse(list[i].sellingPrice) -
+          (double.parse(list[i].sellingPrice) *
+              int.parse(list[i].discount!) /
+              100));
     }
     totalPurchasePrice = purchase;
     totalSellingCost = selling;
   }
+
   void dispose() {
     List productsQuantity = [];
     productsmapsecond = [];
@@ -89,7 +97,7 @@ class _BillingState extends State<BillingScreen> {
     super.dispose();
   }
 
-  void initState(){
+  void initState() {
     productsmapsecond = [];
     productsIDs = [];
     productsmap = [];
@@ -102,30 +110,45 @@ class _BillingState extends State<BillingScreen> {
     return Scaffold(
       body: FutureBuilder<List<Product>>(
           future: fetchProdata2(),
-        builder: (context, snapshot) {
-          List<dynamic> billinglist = snapshot.data ?? [];
-          List<Product> productid = snapshot.data ?? [];
-          calculate(productid);
-          return Container(
-            child: Column(
-              children: [
-                Expanded(
-                  child: Container(
-                    height: 560,
-                    width: double.infinity,
-                    child: ListView.builder(
-                            itemCount: billinglist.length, itemBuilder:(BuildContext context, int index) {
-                              //sellingPrice
-                              return BillingCard(cost: double.parse(billinglist[index].sellingPrice), time: time, discount: int.parse(billinglist[index].discount), itemName: billinglist[index].productName, items: productsQuantity[index],);
-                        }),
+          builder: (context, snapshot) {
+            List<dynamic> billinglist = snapshot.data ?? [];
+            List<Product> productid = snapshot.data ?? [];
+            calculate(productid);
+            return Container(
+              child: Column(
+                children: [
+                  Expanded(
+                    child: Container(
+                      height: 560,
+                      width: double.infinity,
+                      child: ListView.builder(
+                          itemCount: billinglist.length,
+                          itemBuilder: (BuildContext context, int index) {
+                            //sellingPrice
+                            return BillingCard(
+                              cost:
+                                  double.parse(billinglist[index].sellingPrice),
+                              time: time,
+                              discount: int.parse(billinglist[index].discount),
+                              itemName: billinglist[index].productName,
+                              items: productsQuantity[index],
+                            );
+                          }),
+                    ),
                   ),
-                ),
-             PayementCard(time:time,items:productid.length, sellingPrice: totalSellingCost, purchasePrice: totalPurchasePrice, discount: 1, productid: productsIDs, quantity: productsQuantity,),
-              ],
-            ),
-          );
-        }
-      ),
+                  PayementCard(
+                    time: time,
+                    items: productid.length,
+                    sellingPrice: totalSellingCost,
+                    purchasePrice: totalPurchasePrice,
+                    discount: 1,
+                    productid: productsIDs,
+                    quantity: productsQuantity,
+                  ),
+                ],
+              ),
+            );
+          }),
     );
   }
 }

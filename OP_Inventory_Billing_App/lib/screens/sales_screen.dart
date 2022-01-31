@@ -9,8 +9,10 @@ import '../widgets/table.dart';
 Future<List<Billing>> downloadJSON() async {
   // print("download json called");
   // const jsonEndpoint = "http://192.168.174.1/Op/salesData.php";
+  // const jsonEndpoint =
+  //     "http://192.168.0.105:80/php_workspace/inventory_app/salesData.php";
   const jsonEndpoint =
-      "http://192.168.0.105:80/php_workspace/inventory_app/salesData.php";
+      "http://192.168.0.105:80/php_workspace/inventory_app/salesData.php"; //Acces the php file on local system
   final response = await get(Uri.parse(jsonEndpoint));
   if (response.statusCode == 200) {
     List products = json.decode(response.body);

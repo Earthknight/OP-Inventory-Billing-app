@@ -70,8 +70,9 @@ class UpdateProductScreenState extends State<UpdateProductScreen> {
       // print("addData called");
       String id = productId;
       // var url = "http://192.168.174.1/Op/addData.php";
-      var url = "http://192.168.1.109:8080/php_workspace/product/addData.php";
-      // var url = "http://192.168.0.105:80/php_workspace/inventory_app/addData.php";
+      // var url = "http://192.168.1.109:8080/php_workspace/product/addData.php";
+      var url =
+          "http://192.168.0.105:80/php_workspace/inventory_app/addData.php";
       await post(Uri.parse(url), body: {
         "productId": id,
         "productName": productNameController.text,
@@ -85,7 +86,9 @@ class UpdateProductScreenState extends State<UpdateProductScreen> {
 
   void editData() async {
     // var url = "http://192.168.174.1/Op/addData.php";
-    var url = "http://192.168.1.109:8080/php_workspace/product/editData.php";
+    // var url = "http://192.168.1.109:8080/php_workspace/product/editData.php";
+    var url =
+        "http://192.168.0.105:80/php_workspace/inventory_app/editData.php";
     await post(Uri.parse(url), body: {
       "productId": widget.product.productId,
       "productName": productNameController.text,
@@ -216,17 +219,22 @@ class UpdateProductScreenState extends State<UpdateProductScreen> {
                       onPressed: () async {
                         if (widget.buttonTitle == 'Add') {
                           addData();
-                          if (await addProductOrNot(productNameController.text) ==
+                          if (await addProductOrNot(
+                                  productNameController.text) ==
                               true) {
-                            myDialogBox("Added Already","If you want to chnage anything, \nplease update it","OK",context);
+                            myDialogBox(
+                                "Added Already",
+                                "If you want to chnage anything, \nplease update it",
+                                "OK",
+                                context);
                           } else {
                             await downloadJSON();
                             if (_formKey.currentState!.validate()) {
                               setState(() {
                                 Navigator.push(context,
                                     MaterialPageRoute(builder: (context) {
-                                      return TabBarScreen();
-                                    }));
+                                  return TabBarScreen();
+                                }));
                               });
                             }
                           }
@@ -237,8 +245,8 @@ class UpdateProductScreenState extends State<UpdateProductScreen> {
                             setState(() {
                               Navigator.push(context,
                                   MaterialPageRoute(builder: (context) {
-                                    return TabBarScreen();
-                                  }));
+                                return TabBarScreen();
+                              }));
                             });
                           }
                         }

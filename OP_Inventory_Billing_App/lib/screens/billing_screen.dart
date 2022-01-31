@@ -71,6 +71,7 @@ double totalSellingCost = 0;
 String time = DateTime.now().toString();
 
 
+
 class _BillingState extends State<BillingScreen> {
   void calculate(List<Product> list) {
     double purchase = 0.0;
@@ -93,6 +94,8 @@ class _BillingState extends State<BillingScreen> {
 
   void initState(){
     productsmapsecond = [];
+    productsIDs = [];
+    productsmap = [];
     fetchProductIds();
     super.initState();
   }
@@ -120,7 +123,7 @@ class _BillingState extends State<BillingScreen> {
                         }),
                   ),
                 ),
-             PayementCard(time:time,items:productid.length, sellingPrice: totalSellingCost, purchasePrice: totalPurchasePrice, discount: 1,),
+             PayementCard(time:time,items:productid.length, sellingPrice: totalSellingCost, purchasePrice: totalPurchasePrice, discount: 1, productid: productsIDs, quantity: productsQuantity,),
               ],
             ),
           );

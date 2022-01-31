@@ -1,12 +1,14 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:op_inventory_billing_app/model/billingsecond.dart';
+import 'package:op_inventory_billing_app/screens/billing_screen.dart';
 import '../tab_bar_screen.dart';
 import 'TextWidget.dart';
 import 'package:http/http.dart' as http;
 
 var billingid;
-
+var error;
+var billlingdata;
 Future<List<Billings>> getbillingdata() async {
   const jsonEndpoint = "http://192.168.0.7/products_php_files/getbillingdata.php";
   final response = await http.get(Uri.parse(jsonEndpoint));
@@ -26,8 +28,10 @@ class PayementCard extends StatefulWidget {
   final String time;
   final int items;
   final int discount;
+  late final List productid;
+  late final List quantity;
   PayementCard(
-      {required this.sellingPrice,required this.time, required this.items,required this.purchasePrice, required this.discount,});
+      {required this.sellingPrice,required this.time, required this.items,required this.purchasePrice, required this.discount, required this.productid, required this.quantity,});
 
   @override
   State<PayementCard> createState() => _PayementCardState();
@@ -40,19 +44,35 @@ class _PayementCardState extends State<PayementCard> {
     return list.take(5).join('');
   }
 
-  // Future<void> deletedata() async {
-  //   var url = Uri.parse("http://192.168.0.7/products_php_files/deleteselectedproducts.php");
-  //   var response = await http.get(url);
-  //   if(response.statusCode == 200){
-  //     productsmap = json.decode(response.body);
-  //     if(response.body.isEmpty) {
-  //       fetchProdata();
-  //       json.decode(response.body);
-  //     }
-  //   }else{
-  //     throw Exception('Failed.');
-  //   }
-  // }
+  Future<void> deletedata() async {
+    var url = Uri.parse("http://192.168.0.7/products_php_files/deleteselectedproducts.php");
+    var response = await http.get(url);
+    if(response.statusCode == 200){
+      productsmap = json.decode(response.body);
+      if(response.body.isEmpty) {
+        json.decode(response.body);
+      }
+    }else{
+      throw Exception('Failed.');
+    }
+  }
+
+  Future<void> updatePro() async {
+    var url = Uri.parse("http://192.168.0.7/products_php_files/removequanity.php");
+    for(int i = 0;i < widget.productid.length;i++){
+      var response = await http.post(url, body: {
+        "productId": widget.productid[i].toString(),                          //insertdata function in database refer inserbilling.php file
+        "quantity": widget.quantity[i].toString(),
+      });
+      if(response.statusCode == 200){
+        // print(response.body);
+        error = json.decode(response.body);
+        print(error);
+      }else{
+        print('error');
+      }
+      }
+    }
 
   String BillingIdnew (List<Billings> l){
     if(l.isEmpty){
@@ -91,6 +111,8 @@ class _PayementCardState extends State<PayementCard> {
        print('error');
      }
   }
+
+
   @override
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
@@ -99,6 +121,7 @@ class _PayementCardState extends State<PayementCard> {
     return FutureBuilder<List<Billings>>(
       future: getbillingdata(),
       builder: (context, snapshot) {
+        billlingdata = snapshot.data ?? [];
         print(snapshot.data ?? []);
         return Center(
           child: Container(
@@ -135,10 +158,12 @@ class _PayementCardState extends State<PayementCard> {
                   ),
                     onPressed: () {
                       insertData(snapshot.data ?? []);
-                      // deletedata();
+                      updatePro();
+                      deletedata();
+                      BillingScreen();
                       Navigator.of(context, rootNavigator: true).push(
                         MaterialPageRoute(builder: (context) =>  TabBarScreen()),
-                      );//calls insertdata and increments a
+                      );
                     },
                   ),
                 )

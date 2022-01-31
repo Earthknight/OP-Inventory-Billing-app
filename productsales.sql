@@ -107,3 +107,44 @@ END IF;
 -- END IF;
 -- ")
 
+
+--
+-- Table structure for table `billing_cart`
+--
+
+CREATE TABLE `billing_cart` (
+  `id` int NOT NULL,
+  `product_id` varchar(255) NOT NULL,
+  `quantity` int DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+--
+-- Dumping data for table `billing_cart`
+--
+
+INSERT INTO `billing_cart` (`id`, `product_id`, `quantity`) VALUES
+(1, 'P102', 25),
+(2, 'P101', 10);
+
+--
+-- Indexes for dumped tables
+--
+
+--
+-- Indexes for table `billing_cart`
+--
+ALTER TABLE `billing_cart`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- AUTO_INCREMENT for dumped tables
+--
+
+--
+-- AUTO_INCREMENT for table `billing_cart`
+--
+ALTER TABLE `billing_cart`
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+COMMIT;
+
+

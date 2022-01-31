@@ -6,23 +6,39 @@ import 'package:op_inventory_billing_app/model/products/product.dart';
 import 'package:op_inventory_billing_app/screens/products/product_screen.dart';
 import 'package:op_inventory_billing_app/widgets/TextFieldWidget.dart';
 import 'package:op_inventory_billing_app/widgets/TextWidget.dart';
+import 'package:op_inventory_billing_app/widgets/dialogBoxWidget.dart';
 import 'package:op_inventory_billing_app/widgets/get_device_size.dart';
 
 import '../../tab_bar_screen.dart';
 
+Future<bool> addProductOrNot(String productName) async {
+  var list = await downloadJSON();
+  for (int i = 0; i < list.length; i++) {
+    if (productName == list[i].productName) {
+      return true;
+    }
+  }
+  return false;
+}
+
 Future<String> getProductId() async {
   var list = await downloadJSON();
-  String id  = list[list.length-1].productId.substring(1);
+  String id = list[list.length - 1].productId.substring(1);
   int idNumber = int.parse(id);
-  print("P${idNumber++}");
   return "P${idNumber++}";
 }
-class UpdateProductScreen extends StatefulWidget {
 
+class UpdateProductScreen extends StatefulWidget {
   final String appBarTitle;
   final Product product;
   final String buttonTitle;
-  const UpdateProductScreen({Key? key, required this.appBarTitle, required this.product, required this.buttonTitle}) : super(key: key);
+
+  const UpdateProductScreen(
+      {Key? key,
+      required this.appBarTitle,
+      required this.product,
+      required this.buttonTitle})
+      : super(key: key);
 
   @override
   State<StatefulWidget> createState() => UpdateProductScreenState();
@@ -49,31 +65,32 @@ class UpdateProductScreenState extends State<UpdateProductScreen> {
   }
 
   void addData() async {
-    print("addData called");
-    var productId = await getProductId();
-    // print("addData called");
-    String id = productId;
-    // var url = "http://192.168.174.1/Op/addData.php";
-     var url = "http://192.168.1.102:8080/php_workspace/product/addData.php";
-    // var url = "http://192.168.0.105:80/php_workspace/inventory_app/addData.php";
-    await post(Uri.parse(url), body: {
-      "productId": id,
-      "productName": productNameController.text,
-      "productCost": productRatePerItemController.text,
-      "productInStock": sellingRatePerItemController.text,
-      "sellingPrice": quantityController.text,
-      "discount": discountPercentageController.text
-    });
+    if (await addProductOrNot(productNameController.text) == false) {
+      var productId = await getProductId();
+      // print("addData called");
+      String id = productId;
+      // var url = "http://192.168.174.1/Op/addData.php";
+      var url = "http://192.168.1.109:8080/php_workspace/product/addData.php";
+      // var url = "http://192.168.0.105:80/php_workspace/inventory_app/addData.php";
+      await post(Uri.parse(url), body: {
+        "productId": id,
+        "productName": productNameController.text,
+        "productCost": productRatePerItemController.text,
+        "productInStock": sellingRatePerItemController.text,
+        "sellingPrice": quantityController.text,
+        "discount": discountPercentageController.text
+      });
+    }
   }
+
   void editData() async {
-    print("editData called");
     // var url = "http://192.168.174.1/Op/addData.php";
-    var url = "http://192.168.1.102:8080/php_workspace/product/editData.php";
-    await post(Uri.parse(url),body: {
+    var url = "http://192.168.1.109:8080/php_workspace/product/editData.php";
+    await post(Uri.parse(url), body: {
       "productId": widget.product.productId,
       "productName": productNameController.text,
       "productCost": productRatePerItemController.text,
-      "productInStock":  quantityController.text,
+      "productInStock": quantityController.text,
       "sellingPrice": sellingRatePerItemController.text,
       "discount": discountPercentageController.text
     });
@@ -163,39 +180,71 @@ class UpdateProductScreenState extends State<UpdateProductScreen> {
                 SizedBox(
                   height: 0.05 * screenHeight,
                 ),
-                ElevatedButton(
-                  style: ButtonStyle(
-                    backgroundColor: MaterialStateProperty.all(
-                        Theme.of(context).primaryColorDark),
-                    textStyle: MaterialStateProperty.all(
-                        TextStyle(color: Theme.of(context).primaryColorLight)),
-                  ),
-                  child: MyText(
-                    text: "Update",
-                    textScaleFactor: 1.3,
-                  ),
-                  onPressed: () async {
-                    if(widget.buttonTitle == 'Add'){
-                      addData();
-                    }
-                    else{
-                      editData();
-                    }
-                    await downloadJSON();
-                    if (_formKey.currentState!.validate()) {
-                      print(sellingRatePerItemController.text);
-                      print(productNameController.text);
-                      print(productRatePerItemController.text);
-                      print(discountPercentageController.text);
-                      print(quantityController.text);
-                      setState(() {
-                        Navigator.push(context,
-                            MaterialPageRoute(builder: (context) {
-                          return TabBarScreen();
-                        }));
-                      });
-                    }
-                  },
+                Row(
+                  children: [
+                    ElevatedButton(
+                      style: ButtonStyle(
+                        backgroundColor: MaterialStateProperty.all(
+                            Theme.of(context).primaryColorDark),
+                        textStyle: MaterialStateProperty.all(TextStyle(
+                            color: Theme.of(context).primaryColorLight)),
+                      ),
+                      child: MyText(
+                        text: "Cancel",
+                        textScaleFactor: 1.3,
+                      ),
+                      onPressed: () {
+                        setState(() {
+                          Navigator.of(context);
+                        });
+                      },
+                    ),
+                    SizedBox(
+                      width: 10.0,
+                    ),
+                    ElevatedButton(
+                      style: ButtonStyle(
+                        backgroundColor: MaterialStateProperty.all(
+                            Theme.of(context).primaryColorDark),
+                        textStyle: MaterialStateProperty.all(TextStyle(
+                            color: Theme.of(context).primaryColorLight)),
+                      ),
+                      child: MyText(
+                        text: widget.buttonTitle,
+                        textScaleFactor: 1.3,
+                      ),
+                      onPressed: () async {
+                        if (widget.buttonTitle == 'Add') {
+                          addData();
+                          if (await addProductOrNot(productNameController.text) ==
+                              true) {
+                            myDialogBox("Added Already","If you want to chnage anything, \nplease update it","OK",context);
+                          } else {
+                            await downloadJSON();
+                            if (_formKey.currentState!.validate()) {
+                              setState(() {
+                                Navigator.push(context,
+                                    MaterialPageRoute(builder: (context) {
+                                      return TabBarScreen();
+                                    }));
+                              });
+                            }
+                          }
+                        } else {
+                          editData();
+                          await downloadJSON();
+                          if (_formKey.currentState!.validate()) {
+                            setState(() {
+                              Navigator.push(context,
+                                  MaterialPageRoute(builder: (context) {
+                                    return TabBarScreen();
+                                  }));
+                            });
+                          }
+                        }
+                      },
+                    )
+                  ],
                 ),
               ],
             ),

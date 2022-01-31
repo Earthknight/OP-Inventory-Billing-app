@@ -77,9 +77,9 @@ class TabBarState extends State<TabBarScreen>
               backgroundColor: Colors.white,
               title: const Center(
                 child: MyText(
-                  text: "Inventory & Billing App",
+                  text: "Inventory & Billing",
                   fontWeight: FontWeight.bold,
-                  size: 13.0,
+                  size: 11.0,
                 ),
               ),
               pinned: true,

@@ -16,8 +16,6 @@ Future<void> fetchProductIds() async {
       "http://192.168.0.7/products_php_files/fetchbillingid.php");
   final response = await get(url);
   if (response.statusCode == 200) {
-    // gets the list of maps containing data of product id and its quantity
-    // after getting the data we can show this on UI
     List productsIds = json.decode(response.body);
     print(productsIds);
     for(int i = 0;i < productsIds.length;i++){
@@ -28,7 +26,6 @@ Future<void> fetchProductIds() async {
         print(productsIDs);
       }
     }
-    // return products.map((product) => Product.fromJson(product)).toList();
   } else {
     throw Exception('No data found.');
   }
@@ -39,7 +36,7 @@ Future<List<Product>> fetchProdata2() async {
   var url = Uri.parse("http://192.168.0.7/products_php_files/fetchselectedproducts.php");
   for(int i = 0;i < productsIDs.length;i++){
     var response = await http.post(url, body: {
-      "productId": productsIDs[i].toString(),                          //insertdata function in database refer inserbilling.php file
+      "productId": productsIDs[i].toString(),                          
     });
     if(response.statusCode == 200){
       productsmapsecond.add(json.decode(response.body));

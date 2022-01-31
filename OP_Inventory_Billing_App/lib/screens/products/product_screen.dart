@@ -110,39 +110,76 @@ class Items extends StatelessWidget {
       child: Card(
         elevation: 5.0,
         child: MyListTile(
-          title: MyText(
-            text: product.productName.toString(),
+          title: GestureDetector(
+            child: MyText(
+              text: product.productName.toString(),
+            ),
+            onTap: (){
+              Navigator.push(context, MaterialPageRoute(builder: (context) {
+                return UpdateProductScreen(
+                  buttonTitle: 'Update',
+                  appBarTitle: "Update ${product.productName}",
+                  product: product,
+                );
+              }));
+            }
           ),
-          subtitle: MyText(
-            text: "Rs ${product.productCost.toString()}",
+          subtitle: GestureDetector(
+            child: MyText(
+              text: "Rs ${product.productCost.toString()}",
+            ),
+              onTap: (){
+                Navigator.push(context, MaterialPageRoute(builder: (context) {
+                  return UpdateProductScreen(
+                    buttonTitle: 'Update',
+                    appBarTitle: "Update ${product.productName}",
+                    product: product,
+                  );
+                }));
+              }
           ),
-          leading: SizedBox(
-              height: screenWidth * 0.1,
-              width: screenWidth * 0.1,
-              child: QrImage(
-                data: product.productId.toString(),
-                version: QrVersions.auto,
-              ),),
-          trailing: SizedBox(
-              height: screenWidth * 0.1,
-              width: screenWidth * 0.1,
-              child: Card(
-                elevation: 5.0,
-                child: Center(
-                  child: MyText(
-                    text: product.productInStock.toString(),
+          leading: GestureDetector(
+            child: SizedBox(
+                height: screenWidth * 0.1,
+                width: screenWidth * 0.1,
+                child: QrImage(
+                  data: product.productId.toString(),
+                  version: QrVersions.auto,
+                ),),
+                onTap: (){}
+              ,
+          ),
+          trailing: GestureDetector(
+            child: SizedBox(
+                height: screenWidth * 0.1,
+                width: screenWidth * 0.1,
+                child: Card(
+                  elevation: 5.0,
+                  child: Center(
+                    child: MyText(
+                      text: product.productInStock.toString(),
+                    ),
                   ),
-                ),
-              )),
-          ontap: () {
-            Navigator.push(context, MaterialPageRoute(builder: (context) {
-              return UpdateProductScreen(
-                buttonTitle: 'Update',
-                appBarTitle: "Update ${product.productName}",
-                product: product,
-              );
-            }));
-          },
+                )),
+              onTap: (){
+                Navigator.push(context, MaterialPageRoute(builder: (context) {
+                  return UpdateProductScreen(
+                    buttonTitle: 'Update',
+                    appBarTitle: "Update ${product.productName}",
+                    product: product,
+                  );
+                }));
+              }
+          ),
+          // ontap: () {
+          //   Navigator.push(context, MaterialPageRoute(builder: (context) {
+          //     return UpdateProductScreen(
+          //       buttonTitle: 'Update',
+          //       appBarTitle: "Update ${product.productName}",
+          //       product: product,
+          //     );
+          //   }));
+          // },
         ),
       ),
     );

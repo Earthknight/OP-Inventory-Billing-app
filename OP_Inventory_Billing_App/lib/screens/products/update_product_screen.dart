@@ -242,7 +242,6 @@ class UpdateProductScreenState extends State<UpdateProductScreen> {
                             });
                           }
                         }
-
                       },
                     )
                   ],

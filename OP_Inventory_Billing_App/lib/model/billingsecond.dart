@@ -9,8 +9,8 @@ import 'dart:convert';
 
 // String billingsToJson(List<Billings> data) => json.encode(List<dynamic>.from(data.map((x) => x.toJson())));
 //Billing Second model
-class Billings {
-  Billings({
+class Billing2{
+  Billing2({
     required this.billingId,
     required this.billingDateTime,
     required this.billingTaxNum,
@@ -28,7 +28,7 @@ class Billings {
   final int  purchaseAmount;
   int ? discount;
 
-  factory Billings.fromMap(Map<String, dynamic> jsonData) => Billings(
+  factory Billing2.fromMap(Map<String, dynamic> jsonData) => Billing2(
     billingId: jsonData["BillingID"].toString(),
     billingDateTime: jsonData["BillingDateTime"],
     billingTaxNum: int.parse(jsonData["BillingTaxNum"]),

@@ -9,12 +9,12 @@ import 'package:http/http.dart' as http;
 var billingid;
 var error;
 var billlingdata;
-Future<List<Billings>> getbillingdata() async {
+Future<List<Billing>> getbillingdata() async {
   const jsonEndpoint = "http://192.168.0.7/products_php_files/getbillingdata.php";
   final response = await http.get(Uri.parse(jsonEndpoint));
   if (response.statusCode == 200) {
     List billing = await json.decode(response.body);
-    return billing.map((billing) => Billings.fromMap(billing)).toList();    //returns whole value
+    return billing.map((billing) => Billing.fromMap(billing)).toList();    //returns whole value
   } else {
     throw Exception('ERROR');
   }
@@ -74,7 +74,7 @@ class _PayementCardState extends State<PayementCard> {
       }
     }
 
-  String BillingIdnew (List<Billings> l){
+  String BillingIdnew (List<Billing> l){
     if(l.isEmpty){
       int a = 1;
       print("empty");
@@ -90,7 +90,7 @@ class _PayementCardState extends State<PayementCard> {
     }
   }
 
-  Future<void> insertData(List<Billings> l) async {
+  Future<void> insertData(List<Billing> l) async {
     var url = Uri.parse("http://192.168.0.7/insertbilling.php");
      var response = await http.post(url, body: {
       "billingid": "B" +BillingIdnew(l).toString(),                          //insertdata function in database refer inserbilling.php file
@@ -118,7 +118,7 @@ class _PayementCardState extends State<PayementCard> {
     var size = MediaQuery.of(context).size;
     var h = size.height;                        //mediaquery
     var w = size.width;
-    return FutureBuilder<List<Billings>>(
+    return FutureBuilder<List<Billing>>(
       future: getbillingdata(),
       builder: (context, snapshot) {
         billlingdata = snapshot.data ?? [];

@@ -9,6 +9,7 @@ import 'package:http/http.dart' as http;
 var billingid;
 var error;
 var billlingdata;
+
 Future<List<Billing2>> getbillingdata() async {
   const jsonEndpoint = "http://192.168.0.7/products_php_files/getbillingdata.php";
   final response = await http.get(Uri.parse(jsonEndpoint));
@@ -38,7 +39,6 @@ class PayementCard extends StatefulWidget {
 }
 
 class _PayementCardState extends State<PayementCard> {
-
   String get Taxnumber {
     var list = List.generate(50, (index) => index + 1)..shuffle();    //get function to get taxnumber
     return list.take(5).join('');
@@ -91,6 +91,7 @@ class _PayementCardState extends State<PayementCard> {
   }
 
   Future<void> insertData(List<Billing2> l) async {
+    print(widget.purchasePrice.toString());
     var url = Uri.parse("http://192.168.0.7/insertbilling.php");
      var response = await http.post(url, body: {
       "billingid": "B" +BillingIdnew(l).toString(),                          //insertdata function in database refer inserbilling.php file

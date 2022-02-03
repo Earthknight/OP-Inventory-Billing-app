@@ -15,13 +15,16 @@ Future<void> fetchProductIds() async {
   // var url = Uri.parse(
   //     "http://192.168.0.7/products_php_files/fetchbillingid.php");
   var url = Uri.parse(
-      "http://192.168.0.105:80/php_workspace/inventory_app/fetch_product_ids.php");
+      "http://192.168.0.7/products_php_files/fetchproductid.php");
   final response = await get(url);
   if (response.statusCode == 200) {
     List productsIds = json.decode(response.body);
     print(productsIds);
     for (int i = 0; i < productsIds.length; i++) {
       if (productsIDs.contains(productsIds[i]['product_id'])) {
+        productsIDs.add(productsIds[i]['product_id']);
+        productsQuantity.add(productsIds[i]['quantity']);
+        print(productsIDs);
       } else {
         productsIDs.add(productsIds[i]['product_id']);
         productsQuantity.add(productsIds[i]['quantity']);
@@ -37,7 +40,7 @@ Future<List<Product>> fetchProdata2() async {
   // var url = Uri.parse(
   //     "http://192.168.0.7/products_php_files/fetchselectedproducts.php");
   var url = Uri.parse(
-      "http://192.168.0.105:80/php_workspace/inventory_app/fetchselectedproducts.php");
+      "http://192.168.0.7/products_php_files/fetchselectedproducts.php");
   for (int i = 0; i < productsIDs.length; i++) {
     var response = await http.post(url, body: {
       "productId": productsIDs[i].toString(),
@@ -78,18 +81,17 @@ class _BillingState extends State<BillingScreen> {
     double purchase = 0.0;
     double selling = 0.0;
     for (int i = 0; i < list.length; i++) {
-      purchase += double.parse(list[i].productCost);
-      selling += (double.parse(list[i].sellingPrice) -
-          (double.parse(list[i].sellingPrice) *
-              int.parse(list[i].discount!) /
-              100));
+      int itemsAdd = int.parse(productsQuantity[i]);
+      purchase += double.parse(list[i].productCost) * itemsAdd;
+      print(purchase);
+      selling += (double.parse(list[i].sellingPrice) - (double.parse(list[i].sellingPrice) * int.parse(list[i].discount!) / 100)) * itemsAdd;
     }
     totalPurchasePrice = purchase;
     totalSellingCost = selling;
   }
 
   void dispose() {
-    List productsQuantity = [];
+    // List productsQuantity = [];
     productsmapsecond = [];
     productsIDs = [];
     productsmap = [];
@@ -125,6 +127,7 @@ class _BillingState extends State<BillingScreen> {
                           itemCount: billinglist.length,
                           itemBuilder: (BuildContext context, int index) {
                             //sellingPrice
+                            print(productsQuantity[index]);
                             return BillingCard(
                               cost:
                                   double.parse(billinglist[index].sellingPrice),

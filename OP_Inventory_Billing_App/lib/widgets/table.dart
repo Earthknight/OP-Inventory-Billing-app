@@ -3,11 +3,11 @@ import 'package:horizontal_data_table/horizontal_data_table.dart';
 import 'dart:math';
 
 import 'package:op_inventory_billing_app/model/billing.dart';
+import 'package:op_inventory_billing_app/model/billingsecond.dart';
 
 class SalesTable extends StatefulWidget {
-  List<Billing> list;
+  List<Billing2> list;
   SalesTable({Key? key,required this.list}) : super(key: key);
-
   @override
   SalesTableState createState() => SalesTableState();
 }
@@ -162,14 +162,14 @@ class SalesTableState extends State<SalesTable> {
           alignment: Alignment.centerLeft,
         ),
         Container(
-          child: Text('\u{20B9}' + widget.list[index].billingamount.toString()),
+          child: Text('\u{20B9}' + widget.list[index].purchaseAmount.toString()),
           width: 0.25 * w,
           height: 0.06 * h,
           padding: EdgeInsets.fromLTRB(0.01 * w, 0, 0, 0),
           alignment: Alignment.centerLeft,
         ),
         Container(
-          child: Text('\u{20B9}' + widget.list[index].sellingamount.toString()),
+          child: Text('\u{20B9}' + widget.list[index].sellingAmount.toString()),
           width: 0.25 * w,
           height: 0.06 * h,
           padding: EdgeInsets.fromLTRB(0.01 * w, 0, 0, 0),

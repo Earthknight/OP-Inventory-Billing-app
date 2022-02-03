@@ -6,13 +6,15 @@ class MyListTile extends StatelessWidget {
   final Widget? leading;
   final Widget? trailing;
   final VoidCallback? ontap;
+  final bool isSoldOut;
 
   const MyListTile({
     required this.title,
     this.subtitle,
     this.trailing,
     this.leading,
-    this.ontap
+    this.ontap,
+    required this.isSoldOut,
   });
 
   @override
@@ -23,9 +25,7 @@ class MyListTile extends StatelessWidget {
       subtitle: subtitle,
       leading: leading,
       trailing: trailing,
+      tileColor: isSoldOut ? Colors.red.shade400 : null,
     );
   }
 }
-
-
-

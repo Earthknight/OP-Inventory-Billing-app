@@ -9,6 +9,7 @@ import 'package:op_inventory_billing_app/widgets/ListTileWidget.dart';
 import 'package:op_inventory_billing_app/widgets/TextWidget.dart';
 import 'package:op_inventory_billing_app/widgets/get_device_size.dart';
 import 'package:qr_flutter/qr_flutter.dart';
+import 'package:intl/intl.dart';
 
 double screenWidth = 0.0;
 
@@ -54,12 +55,15 @@ class ProductScreenState extends State<ProductScreen> {
               buttonTitle: 'Add',
               appBarTitle: "Add a new product",
               product: Product(
-                  productId: '',
-                  productCost: '',
-                  productInStock: '',
-                  productName: '',
-                  sellingPrice: '',
-                  discount: ''),
+                productId: '',
+                productCost: '',
+                productInStock: '',
+                productName: '',
+                sellingPrice: '',
+                discount: '',
+                expiryDate: DateTime.now(),
+                isPerishAble: false,
+              ),
             );
             ;
           }));
@@ -86,11 +90,24 @@ class ProductScreenState extends State<ProductScreen> {
   }
 }
 
-class Items extends StatelessWidget {
+class Items extends StatefulWidget {
   List<Product> list;
 
   Items({Key? key, required this.list}) : super(key: key);
 
+  @override
+  State<Items> createState() => _ItemsState();
+}
+
+class _ItemsState extends State<Items> {
+  var items = [
+    //For dropdown menu
+    '',
+    'Purchase Price',
+    'Selling Price',
+    'Expiry Date',
+  ];
+  String dropdownvalue = '';
   @override
   Widget build(BuildContext context) {
     // print("Items called");
@@ -98,24 +115,65 @@ class Items extends StatelessWidget {
         shrinkWrap: true,
         scrollDirection: Axis.vertical,
         physics: const ScrollPhysics(),
-        itemCount: list.length,
+        itemCount: widget.list.length,
         itemBuilder: (context, int index) {
-          return listItem(list[index], context);
+          return listItem(widget.list[index], index, context);
         });
+  }
+
+  Widget dropdown(int i) {
+    items[1] = 'Product Cost  ' + widget.list[i].productCost;
+    items[2] = 'Selling Cost  ' + widget.list[i].sellingPrice;
+    items[3] = widget.list[i].isPerishAble
+        ? 'Expiry Date  ' +
+            DateFormat('yyyy-MM-dd')
+                .format(widget.list[i].expiryDate)
+                .toString()
+        : 'Not Perishable';
+    //Dropdown menu created
+    return DropdownButton(
+      // Initial Value
+      value: dropdownvalue,
+
+      // Down Arrow Icon
+      icon: const Icon(Icons.keyboard_arrow_down),
+
+      // Array list of items
+      items: items.map((String items) {
+        return DropdownMenuItem(
+          value: items,
+          child: Text(
+            items,
+            style: TextStyle(fontSize: screenWidth * 0.03),
+          ),
+        );
+      }).toList(),
+      // After selecting the desired option,it will
+      // change button value to selected value
+      onChanged: (String? newValue) {
+        //setState(() {
+        dropdownvalue = newValue!;
+        //});
+      },
+    );
   }
 
   Widget listItem(
     Product product,
+    int i,
     BuildContext context,
   ) {
+    bool isSoldOut = int.parse(product.productInStock) <= 0 ? true : false;
     return Padding(
       padding: EdgeInsets.only(top: screenWidth * 0.015),
       child: Card(
         elevation: 5.0,
         child: MyListTile(
+          isSoldOut: isSoldOut,
           title: GestureDetector(
               child: MyText(
                 text: product.productName.toString(),
+                fontColor: isSoldOut ? Colors.white : Colors.black,
               ),
               onTap: () {
                 Navigator.push(context, MaterialPageRoute(builder: (context) {
@@ -126,19 +184,19 @@ class Items extends StatelessWidget {
                   );
                 }));
               }),
-          subtitle: GestureDetector(
-              child: MyText(
-                text: "Rs ${product.productCost.toString()}",
+          subtitle: Row(
+            children: [
+              Text(
+                'Details',
+                style: TextStyle(fontWeight: FontWeight.bold),
               ),
-              onTap: () {
-                Navigator.push(context, MaterialPageRoute(builder: (context) {
-                  return UpdateProductScreen(
-                    buttonTitle: 'Update',
-                    appBarTitle: "Update ${product.productName}",
-                    product: product,
-                  );
-                }));
-              }),
+              Container(
+                child: dropdown(i),
+                alignment: Alignment.centerRight,
+                width: screenWidth * 0.4,
+              )
+            ],
+          ),
           leading: GestureDetector(
             child: SizedBox(
               height: screenWidth * 0.1,
@@ -149,14 +207,16 @@ class Items extends StatelessWidget {
               ),
             ),
             onTap: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (ctx) => ProductQRCodeDetailScreen(
-                    productId: product.productId.toString(),
+              if (!isSoldOut) {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (ctx) => ProductQRCodeDetailScreen(
+                      productId: product.productId.toString(),
+                    ),
                   ),
-                ),
-              );
+                );
+              }
             },
           ),
           trailing: GestureDetector(

@@ -8,6 +8,8 @@ class Product {
   final String productInStock;
   final String sellingPrice;
   final String? discount;
+  final bool isPerishAble;
+  final DateTime? expiryDate;
 
   Product({
     required this.productId,
@@ -16,6 +18,8 @@ class Product {
     required this.productInStock,
     required this.sellingPrice,
     this.discount,
+     this.expiryDate,
+    required this.isPerishAble,
   });
 
   factory Product.fromJson(Map<dynamic, dynamic> jsonData) {
@@ -26,6 +30,8 @@ class Product {
       productInStock:  jsonData['productInStock'].toString(),
       sellingPrice: jsonData['sellingPrice'].toString(),
       discount: jsonData['discount'].toString(),
+      expiryDate: DateTime.parse(jsonData['expiryDate']),
+      isPerishAble: jsonData['isPerishAble'] == 1 ? true : false,
     );
   }
 }

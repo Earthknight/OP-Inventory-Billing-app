@@ -2,10 +2,12 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'dart:async';
 import 'package:http/http.dart';
+import 'package:intl/intl.dart';
 import 'package:op_inventory_billing_app/model/products/product.dart';
 import 'package:op_inventory_billing_app/screens/products/product_screen.dart';
 import 'package:op_inventory_billing_app/widgets/TextFieldWidget.dart';
 import 'package:op_inventory_billing_app/widgets/TextWidget.dart';
+import 'package:op_inventory_billing_app/widgets/dat_picker_text_Field.dart';
 import 'package:op_inventory_billing_app/widgets/dialogBoxWidget.dart';
 import 'package:op_inventory_billing_app/widgets/get_device_size.dart';
 
@@ -23,9 +25,13 @@ Future<bool> addProductOrNot(String productName) async {
 
 Future<String> getProductId() async {
   var list = await downloadJSON();
-  String id = list[list.length - 1].productId.substring(1);
-  int idNumber = int.parse(id);
-  return "P${idNumber++}";
+    String id = list[list.length - 1].productId.substring(1);
+    print(id);
+    int idNumber = int.parse(id);
+    print(idNumber);
+    int incrementedId = idNumber+1;
+    return "P$incrementedId";
+
 }
 
 class UpdateProductScreen extends StatefulWidget {
@@ -54,6 +60,9 @@ class UpdateProductScreenState extends State<UpdateProductScreen> {
   TextEditingController sellingRatePerItemController = TextEditingController();
   TextEditingController quantityController = TextEditingController();
   TextEditingController discountPercentageController = TextEditingController();
+  TextEditingController dateTimeController = TextEditingController();
+  DateTime isSelected = DateTime.now();
+  bool isPerishableBool = false;
 
   @override
   void initState() {
@@ -62,15 +71,18 @@ class UpdateProductScreenState extends State<UpdateProductScreen> {
     sellingRatePerItemController.text = widget.product.sellingPrice;
     quantityController.text = widget.product.productInStock;
     discountPercentageController.text = widget.product.discount!;
+    tgl = widget.product.expiryDate!;
+    isPerishableBool = widget.product.isPerishAble ;
   }
 
   void addData() async {
     if (await addProductOrNot(productNameController.text) == false) {
       var productId = await getProductId();
+      print(productId);
       // print("addData called");
       String id = productId;
       // var url = "http://192.168.174.1/Op/addData.php";
-      var url = "http://192.168.1.109:8080/php_workspace/product/addData.php";
+      var url = "http://192.168.1.104:8080/php_workspace/product/addData.php";
       // var url = "http://192.168.0.105:80/php_workspace/inventory_app/addData.php";
       await post(Uri.parse(url), body: {
         "productId": id,
@@ -78,23 +90,54 @@ class UpdateProductScreenState extends State<UpdateProductScreen> {
         "productCost": productRatePerItemController.text,
         "productInStock": sellingRatePerItemController.text,
         "sellingPrice": quantityController.text,
-        "discount": discountPercentageController.text
+        "discount": discountPercentageController.text,
+        "expiryDate": "$pilihTanggal",
+        "isPerishAble": forIsPerishable(isPerishableBool),
       });
     }
   }
 
   void editData() async {
     // var url = "http://192.168.174.1/Op/addData.php";
-    var url = "http://192.168.1.109:8080/php_workspace/product/editData.php";
+    var url = "http://192.168.1.104:8080/php_workspace/product/editData.php";
     await post(Uri.parse(url), body: {
       "productId": widget.product.productId,
       "productName": productNameController.text,
       "productCost": productRatePerItemController.text,
       "productInStock": quantityController.text,
       "sellingPrice": sellingRatePerItemController.text,
-      "discount": discountPercentageController.text
+      "discount": discountPercentageController.text,
+      "expiryDate":"$tgl",
+      "isPerishAble": forIsPerishable(isPerishableBool),
     });
   }
+  String forIsPerishable(bool value){
+    if (value == true){
+      return "1";
+    }
+    return "0";
+  }
+
+
+  String pilihTanggal = '', labelText = '';
+  DateTime tgl = DateTime.now();
+  final TextStyle valueStyle = TextStyle(fontSize: 16.0);
+  Future<Null> _selectedDate(BuildContext context) async {
+    final DateTime? picked = await showDatePicker(
+        context: context,
+        initialDate: tgl,
+        firstDate: DateTime(1992),
+        lastDate: DateTime(2099));
+
+    if (picked != null && picked != tgl) {
+      setState(() {
+        tgl = picked;
+        pilihTanggal = DateFormat('yyyy-MM-dd kk:mm:ss').format(tgl);
+            // DateFormat.yMd().format(tgl)
+      });
+    } else {}
+  }
+  
 
   @override
   Widget build(BuildContext context) {
@@ -139,7 +182,7 @@ class UpdateProductScreenState extends State<UpdateProductScreen> {
                 MyTextField(productNameController, TextInputType.text,
                     "Enter the Product name", "Please Enter a value"),
                 SizedBox(
-                  height: 0.05 * screenHeight,
+                  height: 0.02 * screenHeight,
                 ),
                 MyText(
                   text: "PURCHASE RATE PER ITEM",
@@ -148,7 +191,7 @@ class UpdateProductScreenState extends State<UpdateProductScreen> {
                 MyTextField(productRatePerItemController, TextInputType.number,
                     "Enter the purchase rate per item", "Please Enter a value"),
                 SizedBox(
-                  height: 0.05 * screenHeight,
+                  height: 0.02 * screenHeight,
                 ),
                 MyText(
                   text: "SELLING RATE PER ITEM",
@@ -157,7 +200,7 @@ class UpdateProductScreenState extends State<UpdateProductScreen> {
                 MyTextField(sellingRatePerItemController, TextInputType.number,
                     "Enter the selling rate per item", "Please Enter a value"),
                 SizedBox(
-                  height: 0.05 * screenHeight,
+                  height: 0.02 * screenHeight,
                 ),
                 MyText(
                   text: "QUANTITY",
@@ -169,7 +212,7 @@ class UpdateProductScreenState extends State<UpdateProductScreen> {
                     "Enter the Quantity of the product",
                     "Please Enter a value"),
                 SizedBox(
-                  height: 0.05 * screenHeight,
+                  height: 0.02 * screenHeight,
                 ),
                 MyText(
                   text: "DISCOUNT PERCENTAGE",
@@ -178,7 +221,61 @@ class UpdateProductScreenState extends State<UpdateProductScreen> {
                 MyTextField(discountPercentageController, TextInputType.number,
                     "Enter the discount percentage", "Please Enter a value"),
                 SizedBox(
-                  height: 0.05 * screenHeight,
+                  height: 0.02 * screenHeight,
+                ),
+                isPerishableBool
+                ? MyText(
+                  text: "EXPIRY DATE",
+                  size: 3.0,
+                )
+                : SizedBox(),
+                isPerishableBool
+                ?
+                DateDropDown(
+                  labelText: labelText,
+                  valueText: DateFormat('yyyy-MM-dd kk:mm:ss').format(tgl),
+                  // DateFormat.yMd().format(tgl),
+                  valueStyle: valueStyle,
+                  onPressed: () {
+                    _selectedDate(context);
+                  },
+                )
+                // MyDatePickerTextFormField(
+                //   hintText: "Select Expiry Date",
+                //     dateController: dateTimeController,
+                //   lastDate: DateTime.now().add(Duration(days: 366)),
+                //   firstDate: widget.product.expiryDate!,
+                //   initialDate: DateTime.now().add(Duration(days: 1)),
+                //   onDateChanged: (selectedDate) {
+                //     setState(() {
+                //       print(selectedDate);
+                //       print(isSelected);
+                //       isSelected = selectedDate;
+                //     });
+                //   },
+                // )
+                    : SizedBox(),
+                Row(
+                  children: <Widget>[
+                    SizedBox(
+                      width: 10,
+                    ), //SizedBox
+                    MyText(
+                      text: 'IS PERISHABLE?',
+                      size: 3.0,
+                    ), //Text
+                    SizedBox(width: 10), //SizedBox
+                    Checkbox(
+                      value: isPerishableBool,
+                      onChanged: (value) {
+                        setState(() {
+                          print(isPerishableBool);
+                          isPerishableBool = value!;
+                          print(isPerishableBool);
+                        });
+                      },
+                    ), //Checkbox
+                  ], //<Widget>[]
                 ),
                 Row(
                   children: [
@@ -202,6 +299,7 @@ class UpdateProductScreenState extends State<UpdateProductScreen> {
                     SizedBox(
                       width: 10.0,
                     ),
+
                     ElevatedButton(
                       style: ButtonStyle(
                         backgroundColor: MaterialStateProperty.all(
@@ -214,6 +312,14 @@ class UpdateProductScreenState extends State<UpdateProductScreen> {
                         textScaleFactor: 1.3,
                       ),
                       onPressed: () async {
+                        print(widget.product.productId);
+                        print(productNameController.text);
+                        print(productRatePerItemController.text);
+                        print(quantityController.text);
+                        print(sellingRatePerItemController.text);
+                        print(discountPercentageController.text);
+                        print("$pilihTanggal");
+                        print(forIsPerishable(isPerishableBool));
                         if (widget.buttonTitle == 'Add') {
                           addData();
                           if (await addProductOrNot(productNameController.text) ==

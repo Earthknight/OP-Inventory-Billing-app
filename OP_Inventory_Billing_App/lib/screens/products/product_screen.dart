@@ -13,13 +13,13 @@ import 'package:qr_flutter/qr_flutter.dart';
 double screenWidth = 0.0;
 
 Future<List<Product>> downloadJSON() async {
-  // print("download json called");
+  print("download json called");
 
-  const jsonEndpoint = "http://192.168.1.109:8080/php_workspace/product/getData.php";
+  const jsonEndpoint = "http://192.168.1.104:8080/php_workspace/product/getData.php";
   final response = await get(Uri.parse(jsonEndpoint));
   if (response.statusCode == 200) {
     List products = json.decode(response.body);
-    // print(products);
+    print(products);
     return products.map((product) => Product.fromJson(product)).toList();
   } else {
     throw Exception('We were not able to successfully download the json data.');
@@ -57,8 +57,11 @@ class ProductScreenState extends State<ProductScreen> {
                   productInStock: '',
                   productName: '',
                   sellingPrice: '',
-                  discount: ''),
-            );;
+                  discount: '',
+                isPerishAble: false,
+                expiryDate: DateTime.now(),
+              ),
+            );
           }));
         },
       ),

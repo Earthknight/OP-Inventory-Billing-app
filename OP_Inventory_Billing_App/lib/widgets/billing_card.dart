@@ -32,7 +32,7 @@ class BillingCard extends StatelessWidget {
                 ),
                 Row(
                   children:  [
-                    MyText(text: "Rs " + (cost! - (cost! * discount!/100)).toString(),size: 14,fontColor: Colors.black,fontWeight: FontWeight.bold,),
+                    MyText(text: "Rs " + ((cost! - (cost! * discount!/100)) * int.parse(items)).toString(),size: 14,fontColor: Colors.black,fontWeight: FontWeight.bold,),
                        Padding(
                       padding: EdgeInsets.only(top: 0.00 * h,left: 0.02 * w),
                       child: MyText(text: discount.toString() + "%",size: 1,fontColor: Colors.red),

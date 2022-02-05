@@ -30,8 +30,7 @@ class Product {
       sellingPrice: jsonData['sellingPrice'].toString(),
       discount: jsonData['discount'].toString(),
       expiryDate: DateTime.parse(jsonData['expiry_date'].toString()),
-      isPerishAble:
-          int.parse(jsonData['isPerishAble'].toString()) == 0 ? false : true,
+      isPerishAble: int.parse(jsonData['isPerishAble'].toString()) == 0 ? false : true,
     );
   }
 }

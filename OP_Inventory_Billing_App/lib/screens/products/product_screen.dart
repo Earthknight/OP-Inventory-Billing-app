@@ -1,3 +1,4 @@
+//http://192.168.0.7/products_php_files/getData.php
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'dart:async';
@@ -18,7 +19,7 @@ Future<List<Product>> downloadJSON() async {
 
   // const jsonEndpoint = "http://192.168.1.109:8080/php_workspace/product/getData.php";
   const jsonEndpoint =
-      "http://192.168.0.105:80/php_workspace/inventory_app/getData.php";
+      "http://192.168.0.7/products_php_files/getData.php";
   final response = await get(Uri.parse(jsonEndpoint));
   if (response.statusCode == 200) {
     List products = json.decode(response.body);
@@ -75,15 +76,15 @@ class ProductScreenState extends State<ProductScreen> {
           if (snapshot.hasError) print(snapshot.error);
           return snapshot.hasData
               ? Padding(
-                  padding: EdgeInsets.only(
-                      left: screenWidth * 0.03, right: screenWidth * 0.03),
-                  child: Items(
-                    list: snapshot.data ?? [],
-                  ),
-                )
+            padding: EdgeInsets.only(
+                left: screenWidth * 0.03, right: screenWidth * 0.03),
+            child: Items(
+              list: snapshot.data ?? [],
+            ),
+          )
               : Center(
-                  child: CircularProgressIndicator(),
-                );
+            child: CircularProgressIndicator(),
+          );
         },
       ),
     );
@@ -126,9 +127,9 @@ class _ItemsState extends State<Items> {
     items[2] = 'Selling Cost  ' + widget.list[i].sellingPrice;
     items[3] = widget.list[i].isPerishAble
         ? 'Expiry Date  ' +
-            DateFormat('yyyy-MM-dd')
-                .format(widget.list[i].expiryDate)
-                .toString()
+        DateFormat('yyyy-MM-dd')
+            .format(widget.list[i].expiryDate)
+            .toString()
         : 'Not Perishable';
     //Dropdown menu created
     return DropdownButton(
@@ -144,7 +145,7 @@ class _ItemsState extends State<Items> {
           value: items,
           child: Text(
             items,
-            style: TextStyle(fontSize: screenWidth * 0.03),
+            style: TextStyle(fontSize: screenWidth * 0.02),
           ),
         );
       }).toList(),
@@ -159,10 +160,10 @@ class _ItemsState extends State<Items> {
   }
 
   Widget listItem(
-    Product product,
-    int i,
-    BuildContext context,
-  ) {
+      Product product,
+      int i,
+      BuildContext context,
+      ) {
     bool isSoldOut = int.parse(product.productInStock) <= 0 ? true : false;
     return Padding(
       padding: EdgeInsets.only(top: screenWidth * 0.015),
@@ -193,7 +194,7 @@ class _ItemsState extends State<Items> {
               Container(
                 child: dropdown(i),
                 alignment: Alignment.centerRight,
-                width: screenWidth * 0.4,
+                width: screenWidth * 0.33,
               )
             ],
           ),
@@ -222,12 +223,13 @@ class _ItemsState extends State<Items> {
           trailing: GestureDetector(
               child: SizedBox(
                   height: screenWidth * 0.1,
-                  width: screenWidth * 0.1,
+                  width: screenWidth * 0.14,
                   child: Card(
                     elevation: 5.0,
                     child: Center(
                       child: MyText(
                         text: product.productInStock.toString(),
+                        lines: 1,
                       ),
                     ),
                   )),

@@ -54,6 +54,7 @@ class UpdateProductScreenState extends State<UpdateProductScreen> {
   TextEditingController sellingRatePerItemController = TextEditingController();
   TextEditingController quantityController = TextEditingController();
   TextEditingController discountPercentageController = TextEditingController();
+  bool isPerishableBool = false;
 
   @override
   void initState() {
@@ -62,6 +63,7 @@ class UpdateProductScreenState extends State<UpdateProductScreen> {
     sellingRatePerItemController.text = widget.product.sellingPrice;
     quantityController.text = widget.product.productInStock;
     discountPercentageController.text = widget.product.discount!;
+    isPerishableBool = widget.product.isPerishAble;
   }
 
   void addData() async {
@@ -79,7 +81,8 @@ class UpdateProductScreenState extends State<UpdateProductScreen> {
         "productCost": productRatePerItemController.text,
         "productInStock": sellingRatePerItemController.text,
         "sellingPrice": quantityController.text,
-        "discount": discountPercentageController.text
+        "discount": discountPercentageController.text,
+        "isPerishAble": forIsPerishable(isPerishableBool)
       });
     }
   }
@@ -95,8 +98,16 @@ class UpdateProductScreenState extends State<UpdateProductScreen> {
       "productCost": productRatePerItemController.text,
       "productInStock": quantityController.text,
       "sellingPrice": sellingRatePerItemController.text,
-      "discount": discountPercentageController.text
+      "discount": discountPercentageController.text,
+      "isPerishAble": forIsPerishable(isPerishableBool)
     });
+  }
+
+  String forIsPerishable(bool value) {
+    if (value == true) {
+      return "1";
+    }
+    return "0";
   }
 
   @override
@@ -182,6 +193,27 @@ class UpdateProductScreenState extends State<UpdateProductScreen> {
                     "Enter the discount percentage", "Please Enter a value"),
                 SizedBox(
                   height: 0.05 * screenHeight,
+                ),
+                Row(
+                  children: <Widget>[
+                    SizedBox(
+                      width: 10,
+                    ), //SizedBox
+                    MyText(
+                      text: 'IS PERISHABLE?',
+                      size: 3.0,
+                    ), //Text
+                    SizedBox(width: 10), //SizedBox
+                    Checkbox(
+                      value: isPerishableBool,
+                      onChanged: (value) {
+                        setState(() {
+                          isPerishableBool = value!;
+                          print(isPerishableBool);
+                        });
+                      },
+                    ), //Checkbox
+                  ], //<Widget>[]
                 ),
                 Row(
                   children: [

@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart';
 import 'package:op_inventory_billing_app/widgets/get_device_size.dart';
 import 'package:intl/intl.dart';
-import 'dart:io';
 
 class NotificationScreen extends StatefulWidget {
   const NotificationScreen({Key? key}) : super(key: key);
@@ -23,15 +22,31 @@ class _NotificationScreenState extends State<NotificationScreen> {
     final response = await get(url);
     if (response.statusCode == 200) {
       List productExpiry = json.decode(response.body);
+      // print(productExpiry.length);
+      // for (int i = 0; i < productExpiry.length; i++) {
+      //   if (productexpiry[i].containsKey('expiry_date')) {
+      //     if (productexpiry[i]['expiry_date'].contains()) {}
+      //   }
+      //   if (productexpiry.contains(productExpiry[i]['expiry_date'])) {
+      //   } else {
+      //     productexpiry.add({
+      //       'product_id': productExpiry[i]['productId'],
+      //       'expiry_date': productExpiry[i]['expiry_date']
+      //     });
+      //   }
+      // }
       productexpiry = List.from(productExpiry);
     } else {
       throw Exception('No data found.');
     }
   }
 
-  bool nearExpiry(List<dynamic> l) {
+  void initList(List<dynamic> l) {
+    fetchProductIds();
     list = [];
+    // print(l.length);
     for (int index = 0; index < l.length; index++) {
+      // print(index);
       list.add(ListTile(
         title: Text(
           l[index]['notification_message'].toString() +
@@ -43,22 +58,45 @@ class _NotificationScreenState extends State<NotificationScreen> {
         ),
       ));
     }
+    print(list.length);
+    print(
+        'Length of product expiry array is ' + productexpiry.length.toString());
     for (int index = 0; index < productexpiry.length; index++) {
+      print(index);
+
       DateTime date = DateFormat("yyyy-MM-dd hh:mm:ss")
           .parse(productexpiry[index]['expiry_date']!);
-      if (date.isBefore(DateTime.now().add(const Duration(days: 10))) == true) {
+      if (date.isAfter(DateTime.now().subtract(const Duration(days: 10)))) {
         list.add(ListTile(
           title: Text(
             'Expiry Date is near for product id: ' +
-                productexpiry[index]['productId'].toString(),
+                productexpiry[index]['product_id'].toString(),
           ),
         ));
       }
     }
-    return true;
+  }
+  // setState(() {
+  //   list = list;
+  // });
+
+  bool nearExpiry(List<dynamic> l) {
+    for (int index = 0; index < productexpiry.length; index++) {
+      DateTime date = DateFormat("yyyy-MM-dd hh:mm:ss")
+          .parse(productexpiry[index]['expiry_date']!);
+      if (date.isAfter(DateTime.now().subtract(const Duration(days: 10))) ==
+          true) {
+        initList(l);
+        return true;
+      }
+    }
+    initList(l);
+    return false;
   }
 
   Future<List<dynamic>> downloadJSON() async {
+    // print("download json called");
+    // const jsonEndpoint = "http://192.168.174.1/Op/getData.php";
     const jsonEndpoint =
         "http://192.168.0.105:80/php_workspace/inventory_app/get_notifications.php";
     final response = await get(Uri.parse(jsonEndpoint));
@@ -72,16 +110,15 @@ class _NotificationScreenState extends State<NotificationScreen> {
     }
   }
 
-  @override
-  void initState() {
-    super.initState();
-    // fetchProductIds();
-  }
+  // @override
+  // void initState() {
+  //   super.initState();
+  //   downloadJSON();
+  // }
 
   @override
   Widget build(BuildContext context) {
     final deviceSize = GetDeviceSize.getDeviceSize(context);
-    fetchProductIds();
     return Scaffold(
       appBar: AppBar(
         title: const Text(

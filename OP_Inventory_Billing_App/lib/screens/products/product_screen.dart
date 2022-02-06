@@ -19,7 +19,7 @@ Future<List<Product>> downloadJSON() async {
 
   // const jsonEndpoint = "http://192.168.1.109:8080/php_workspace/product/getData.php";
   const jsonEndpoint =
-      "http://192.168.0.7/products_php_files/getData.php";
+      "http://192.168.0.7/billing_inventory_php/getData.php";
   final response = await get(Uri.parse(jsonEndpoint));
   if (response.statusCode == 200) {
     List products = json.decode(response.body);
@@ -214,6 +214,8 @@ class _ItemsState extends State<Items> {
                   MaterialPageRoute(
                     builder: (ctx) => ProductQRCodeDetailScreen(
                       productId: product.productId.toString(),
+                      productName: product.productName.toString(),
+                      productSellingPrice: product.sellingPrice.toString(),
                     ),
                   ),
                 );

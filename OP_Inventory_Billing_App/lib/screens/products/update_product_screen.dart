@@ -76,7 +76,7 @@ class UpdateProductScreenState extends State<UpdateProductScreen> {
       String idnew = productId;
       print(idnew);
       // var url = "http://192.168.174.1/Op/addData.php";
-      var url = "http://192.168.0.7/products_php_files/addData2.php";
+      var url = "http://192.168.0.7/billing_inventory_php/addData2.php";
       // var url = "http://192.168.0.105:80/php_workspace/inventory_app/addData.php";
       await post(Uri.parse(url), body: {
         "productId": idnew,
@@ -95,7 +95,7 @@ class UpdateProductScreenState extends State<UpdateProductScreen> {
     print(widget.product.productId);
     print(productRatePerItemController.text);
     // var url = "http://192.168.174.1/Op/addData.php";
-    var url = "http://192.168.0.7/products_php_files/editData2.php";
+    var url = "http://192.168.0.7/billing_inventory_php/editData2.php";
     await post(Uri.parse(url), body: {
       "productId": widget.product.productId,
       "productName": productNameController.text,

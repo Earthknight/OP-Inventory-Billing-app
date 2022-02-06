@@ -15,7 +15,7 @@ Future<void> fetchProductIds() async {
   // var url = Uri.parse(
   //     "http://192.168.0.7/products_php_files/fetchbillingid.php");
   var url = Uri.parse(
-      "http://192.168.0.7/products_php_files/fetchproductid.php");
+      "http://192.168.0.7/billing_inventory_php/fetchproductid.php");
   final response = await get(url);
   if (response.statusCode == 200) {
     List productsIds = json.decode(response.body);
@@ -40,7 +40,7 @@ Future<List<Product>> fetchProdata2() async {
   // var url = Uri.parse(
   //     "http://192.168.0.7/products_php_files/fetchselectedproducts.php");
   var url = Uri.parse(
-      "http://192.168.0.7/products_php_files/fetchselectedproducts.php");
+      "http://192.168.0.7/billing_inventory_php/fetchselectedproducts.php");
   for (int i = 0; i < productsIDs.length; i++) {
     var response = await http.post(url, body: {
       "productId": productsIDs[i].toString(),

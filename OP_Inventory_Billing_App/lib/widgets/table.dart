@@ -3,7 +3,6 @@ import 'package:horizontal_data_table/horizontal_data_table.dart';
 import 'dart:math';
 
 import 'package:op_inventory_billing_app/model/billing.dart';
-import 'package:op_inventory_billing_app/model/billingsecond.dart';
 
 class SalesTable extends StatefulWidget {
   List<Billing2> list;

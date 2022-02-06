@@ -2,11 +2,11 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:http/http.dart';
-import 'package:op_inventory_billing_app/model/billing.dart';
 import '../model/products/product.dart';
 import '../widgets/table.dart';
 import 'package:intl/intl.dart';
-import 'package:op_inventory_billing_app/model/billingsecond.dart';
+import 'package:op_inventory_billing_app/model/billing.dart';
+import '../model/billing.dart';
 
 class SalesScreen extends StatefulWidget {
   SalesScreen({
@@ -35,7 +35,7 @@ class _SalesScreenState extends State<SalesScreen> {
   Future<List<Billing2>> downloadJSON() async {
     // print("download json called");
     const jsonEndpoint =
-        "http://192.168.0.7/products_php_files/salesData.php"; //Acces the php file on local system
+        "http://192.168.0.7/billing_inventory_php/salesData.php"; //Acces the php file on local system
     final response = await get(Uri.parse(jsonEndpoint)); //Send get request
     if (response.statusCode == 200) {
       //success confirmation

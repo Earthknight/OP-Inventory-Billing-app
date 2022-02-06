@@ -1,6 +1,6 @@
 <?php
 
-$conn=new mysqli("localhost","root","","productsales");
+$conn=new mysqli("localhost","root","root","productsales");
 
 if($conn){
 

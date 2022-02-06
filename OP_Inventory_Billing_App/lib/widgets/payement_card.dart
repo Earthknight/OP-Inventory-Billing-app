@@ -1,6 +1,6 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
-import 'package:op_inventory_billing_app/model/billingsecond.dart';
+import 'package:op_inventory_billing_app/model/billing.dart';
 import 'package:op_inventory_billing_app/screens/billing_screen.dart';
 import '../tab_bar_screen.dart';
 import 'TextWidget.dart';
@@ -11,7 +11,7 @@ var error;
 var billlingdata;
 
 Future<List<Billing2>> getbillingdata() async {
-  const jsonEndpoint = "http://192.168.0.7/products_php_files/getbillingdata.php";
+  const jsonEndpoint = "http://192.168.0.7/billing_inventory_php/getbillingdata.php";
   final response = await http.get(Uri.parse(jsonEndpoint));
   if (response.statusCode == 200) {
     List billing = await json.decode(response.body);
@@ -45,7 +45,7 @@ class _PayementCardState extends State<PayementCard> {
   }
 
   Future<void> deletedata() async {
-    var url = Uri.parse("http://192.168.0.7/products_php_files/deleteselectedproducts.php");
+    var url = Uri.parse("http://192.168.0.7/billing_inventory_php/deleteselectedproducts.php");
     var response = await http.get(url);
     if(response.statusCode == 200){
       productsmap = json.decode(response.body);
@@ -58,7 +58,7 @@ class _PayementCardState extends State<PayementCard> {
   }
 
   Future<void> updatePro() async {
-    var url = Uri.parse("http://192.168.0.7/products_php_files/removequanity.php");
+    var url = Uri.parse("http://192.168.0.7/billing_inventory_php/removequanity.php");
     for(int i = 0;i < widget.productid.length;i++){
       var response = await http.post(url, body: {
         "productId": widget.productid[i].toString(),                          //insertdata function in database refer inserbilling.php file
@@ -92,7 +92,7 @@ class _PayementCardState extends State<PayementCard> {
 
   Future<void> insertData(List<Billing2> l) async {
     print(widget.purchasePrice.toString());
-    var url = Uri.parse("http://192.168.0.7/insertbilling.php");
+    var url = Uri.parse("http://192.168.0.7/billing_inventory_php/insertbilling.php");
      var response = await http.post(url, body: {
       "billingid": "B" +BillingIdnew(l).toString(),                          //insertdata function in database refer inserbilling.php file
       "billingdatetime": widget.time.toString(),
@@ -112,8 +112,7 @@ class _PayementCardState extends State<PayementCard> {
        print('error');
      }
   }
-
-
+  
   @override
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;

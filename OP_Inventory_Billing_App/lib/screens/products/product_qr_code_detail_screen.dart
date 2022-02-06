@@ -11,9 +11,13 @@ class ProductQRCodeDetailScreen extends StatefulWidget {
   const ProductQRCodeDetailScreen({
     Key? key,
     required this.productId,
+    required this.productName,
+    required this.productSellingPrice,
   }) : super(key: key);
 
   final String productId;
+  final String productName;
+  final String productSellingPrice;
 
   @override
   State<ProductQRCodeDetailScreen> createState() =>
@@ -28,6 +32,48 @@ class _ProductQRCodeDetailScreenState extends State<ProductQRCodeDetailScreen> {
       "product_id": widget.productId,
       "product_quantity": productQuantity.toString(),
     });
+  }
+
+  showAlertDialog(BuildContext context) {
+    // set up the buttons
+    Widget cancelButton = FlatButton(
+      child: const Text("Cancel"),
+      onPressed: () {
+        Navigator.of(context).pop();
+      },
+    );
+    Widget continueButton = FlatButton(
+      child: const Text("Continue"),
+      onPressed: () {
+        addBillingItemInCart(
+          int.parse(quantityTextEditingController.text),
+        );
+        Navigator.of(context).pop();
+        Navigator.of(context).pop();
+      },
+    );
+
+    // set up the AlertDialog
+    AlertDialog alert = AlertDialog(
+      title: const Text("Are you sure?"),
+      content: Text(
+        "Selling Price of the item " +
+            widget.productName +
+            " is " +
+            widget.productSellingPrice,
+      ),
+      actions: [
+        cancelButton,
+        continueButton,
+      ],
+    );
+    // show the dialog
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return alert;
+      },
+    );
   }
 
   @override
@@ -103,11 +149,12 @@ class _ProductQRCodeDetailScreenState extends State<ProductQRCodeDetailScreen> {
                   children: [
                     RaisedButton(
                       onPressed: () {
-                        print(quantityTextEditingController.text);
-                        addBillingItemInCart(
-                          int.parse(quantityTextEditingController.text),
-                        );
-                        Navigator.of(context).pop();
+                        // print(quantityTextEditingController.text);
+                        // addBillingItemInCart(
+                        //   int.parse(quantityTextEditingController.text),
+                        // );
+
+                        showAlertDialog(context);
                       },
                       child: Container(
                         padding: const EdgeInsets.all(15),

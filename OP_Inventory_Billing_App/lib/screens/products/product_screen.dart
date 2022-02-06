@@ -213,6 +213,8 @@ class _ItemsState extends State<Items> {
                   MaterialPageRoute(
                     builder: (ctx) => ProductQRCodeDetailScreen(
                       productId: product.productId.toString(),
+                      productName: product.productName.toString(),
+                      productSellingPrice: product.sellingPrice.toString(),
                     ),
                   ),
                 );

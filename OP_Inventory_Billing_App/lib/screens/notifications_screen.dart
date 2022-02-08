@@ -18,8 +18,8 @@ class _NotificationScreenState extends State<NotificationScreen> {
 
   List<Map<String, dynamic>> productexpiry = [];
   Future<void> fetchProductIds() async {
-    var url = Uri.parse(
-        "http://192.168.0.7/billing_inventory_php/getData.php");
+    var url =
+        Uri.parse("http://192.168.174.1/billing_inventory_php/getData.php");
     final response = await get(url);
     if (response.statusCode == 200) {
       List productExpiry = json.decode(response.body);
@@ -61,7 +61,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
 
   Future<List<dynamic>> downloadJSON() async {
     const jsonEndpoint =
-        "http://192.168.0.7/products_php_files/get_notifications.php";
+        "http://192.168.174.1/billing_inventory_php/get_notifications.php";
     final response = await get(Uri.parse(jsonEndpoint));
     if (response.statusCode == 200) {
       List products = json.decode(response.body);

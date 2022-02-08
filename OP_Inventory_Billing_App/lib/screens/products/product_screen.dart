@@ -1,4 +1,4 @@
-//http://192.168.0.7/products_php_files/getData.php
+//http://192.168.174.1/billing_inventory_php/getData.php
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'dart:async';
@@ -18,8 +18,7 @@ Future<List<Product>> downloadJSON() async {
   // print("download json called");
 
   // const jsonEndpoint = "http://192.168.1.109:8080/php_workspace/product/getData.php";
-  const jsonEndpoint =
-      "http://192.168.0.7/billing_inventory_php/getData.php";
+  const jsonEndpoint = "http://192.168.174.1/billing_inventory_php/getData.php";
   final response = await get(Uri.parse(jsonEndpoint));
   if (response.statusCode == 200) {
     List products = json.decode(response.body);
@@ -66,7 +65,6 @@ class ProductScreenState extends State<ProductScreen> {
                 isPerishAble: false,
               ),
             );
-            ;
           }));
         },
       ),
@@ -76,15 +74,15 @@ class ProductScreenState extends State<ProductScreen> {
           if (snapshot.hasError) print(snapshot.error);
           return snapshot.hasData
               ? Padding(
-            padding: EdgeInsets.only(
-                left: screenWidth * 0.03, right: screenWidth * 0.03),
-            child: Items(
-              list: snapshot.data ?? [],
-            ),
-          )
+                  padding: EdgeInsets.only(
+                      left: screenWidth * 0.03, right: screenWidth * 0.03),
+                  child: Items(
+                    list: snapshot.data ?? [],
+                  ),
+                )
               : Center(
-            child: CircularProgressIndicator(),
-          );
+                  child: CircularProgressIndicator(),
+                );
         },
       ),
     );
@@ -127,9 +125,9 @@ class _ItemsState extends State<Items> {
     items[2] = 'Selling Cost  ' + widget.list[i].sellingPrice;
     items[3] = widget.list[i].isPerishAble
         ? 'Expiry Date  ' +
-        DateFormat('yyyy-MM-dd')
-            .format(widget.list[i].expiryDate)
-            .toString()
+            DateFormat('yyyy-MM-dd')
+                .format(widget.list[i].expiryDate)
+                .toString()
         : 'Not Perishable';
     //Dropdown menu created
     return DropdownButton(
@@ -160,10 +158,10 @@ class _ItemsState extends State<Items> {
   }
 
   Widget listItem(
-      Product product,
-      int i,
-      BuildContext context,
-      ) {
+    Product product,
+    int i,
+    BuildContext context,
+  ) {
     bool isSoldOut = int.parse(product.productInStock) <= 0 ? true : false;
     return Padding(
       padding: EdgeInsets.only(top: screenWidth * 0.015),
@@ -244,15 +242,6 @@ class _ItemsState extends State<Items> {
                   );
                 }));
               }),
-          // ontap: () {
-          //   Navigator.push(context, MaterialPageRoute(builder: (context) {
-          //     return UpdateProductScreen(
-          //       buttonTitle: 'Update',
-          //       appBarTitle: "Update ${product.productName}",
-          //       product: product,
-          //     );
-          //   }));
-          // },
         ),
       ),
     );

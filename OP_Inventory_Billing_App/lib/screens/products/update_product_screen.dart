@@ -76,7 +76,7 @@ class UpdateProductScreenState extends State<UpdateProductScreen> {
       String idnew = productId;
       print(idnew);
       // var url = "http://192.168.174.1/Op/addData.php";
-      var url = "http://192.168.0.7/billing_inventory_php/addData2.php";
+      var url = "http://192.168.174.1/billing_inventory_php/addData2.php";
       // var url = "http://192.168.0.105:80/php_workspace/inventory_app/addData.php";
       await post(Uri.parse(url), body: {
         "productId": idnew,
@@ -95,7 +95,7 @@ class UpdateProductScreenState extends State<UpdateProductScreen> {
     print(widget.product.productId);
     print(productRatePerItemController.text);
     // var url = "http://192.168.174.1/Op/addData.php";
-    var url = "http://192.168.0.7/billing_inventory_php/editData2.php";
+    var url = "http://192.168.174.1/billing_inventory_php/editData2.php";
     await post(Uri.parse(url), body: {
       "productId": widget.product.productId,
       "productName": productNameController.text,
@@ -108,12 +108,13 @@ class UpdateProductScreenState extends State<UpdateProductScreen> {
     });
   }
 
-  String forIsPerishable(bool value){
-    if (value == true){
+  String forIsPerishable(bool value) {
+    if (value == true) {
       return "1";
     }
     return "0";
   }
+
   void _presentDatePicker() {
     showDatePicker(
       context: context,
@@ -239,32 +240,38 @@ class UpdateProductScreenState extends State<UpdateProductScreen> {
                 ),
                 isPerishableBool
                     ? Row(
-                  children: [
-                    SizedBox(width: 5),
-                    const MyText(
-                      text: "EXPIRY DATE",
-                      size: 3.0,
-                    ),
-                    const SizedBox(
-                      width:40,
-                    ),
-                    Text(DateFormat('yyyy-MM-dd').format(selectedDate).toString(),style: TextStyle(
-                      color: Colors.red,
-                    ),)
-                  ],
-                ) : SizedBox(),
+                        children: [
+                          SizedBox(width: 5),
+                          const MyText(
+                            text: "EXPIRY DATE",
+                            size: 3.0,
+                          ),
+                          const SizedBox(
+                            width: 40,
+                          ),
+                          Text(
+                            DateFormat('yyyy-MM-dd')
+                                .format(selectedDate)
+                                .toString(),
+                            style: TextStyle(
+                              color: Colors.red,
+                            ),
+                          )
+                        ],
+                      )
+                    : SizedBox(),
                 isPerishableBool
-                    ?   FlatButton(
-                  onPressed: _presentDatePicker,
-                  child: const Text(
-                    'Select A Date',
-                    style: TextStyle(
-                      fontFamily: 'Lato',
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  textColor: Theme.of(context).primaryColor,
-                )
+                    ? FlatButton(
+                        onPressed: _presentDatePicker,
+                        child: const Text(
+                          'Select A Date',
+                          style: TextStyle(
+                            fontFamily: 'Lato',
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        textColor: Theme.of(context).primaryColor,
+                      )
                     : SizedBox(),
                 Row(
                   children: [
@@ -302,17 +309,22 @@ class UpdateProductScreenState extends State<UpdateProductScreen> {
                       onPressed: () async {
                         if (widget.buttonTitle == 'Add') {
                           addData();
-                          if (await addProductOrNot(productNameController.text) ==
+                          if (await addProductOrNot(
+                                  productNameController.text) ==
                               true) {
-                            myDialogBox("Added Already","If you want to chnage anything, \nplease update it","OK",context);
+                            myDialogBox(
+                                "Added Already",
+                                "If you want to chnage anything, \nplease update it",
+                                "OK",
+                                context);
                           } else {
                             await downloadJSON();
                             if (_formKey.currentState!.validate()) {
                               setState(() {
                                 Navigator.push(context,
                                     MaterialPageRoute(builder: (context) {
-                                      return TabBarScreen();
-                                    }));
+                                  return TabBarScreen();
+                                }));
                               });
                             }
                           }
@@ -324,8 +336,8 @@ class UpdateProductScreenState extends State<UpdateProductScreen> {
                             setState(() {
                               Navigator.push(context,
                                   MaterialPageRoute(builder: (context) {
-                                    return TabBarScreen();
-                                  }));
+                                return TabBarScreen();
+                              }));
                             });
                           }
                         }

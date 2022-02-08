@@ -192,7 +192,7 @@ class _SalesScreenState extends State<SalesScreen> {
       int a = 1;
       // print("empty");
       String BillingIdpad = a.toString().padLeft(5, '0');
-      // print(BillingIdpad);                                //get function to get billing id
+       //print(BillingIdpad);                                //get function to get billing id
       return BillingIdpad;
     } else {
       String result = l.last.billingId.substring(1, 6);
@@ -224,7 +224,7 @@ class _SalesScreenState extends State<SalesScreen> {
     // await fetchProductIds();
     // await fetchProdata2();
     var url = Uri.parse(
-        "http://192.168.174.1/billing_inventory_php/insertbilling.php");
+        "http://192.168.174.1/billing_inventory_php/insertbilling2.php");
     print("items" +
         order
             .where((element) => int.parse(element["count"]!) > 0)
@@ -256,10 +256,6 @@ class _SalesScreenState extends State<SalesScreen> {
     print(response.body);
     if (response.statusCode == 200) {
       print(response.body);
-      if (response.body.isEmpty) {
-        insertData(l);
-        json.decode(response.body);
-      }
     } else {
       print('error hahaha');
     }
@@ -399,9 +395,9 @@ class _SalesScreenState extends State<SalesScreen> {
             print(order);
             if (order.isNotEmpty) {
               updatePro();
-              getbillingdata();
+              await getbillingdata();
               calculate(order);
-              insertData(curr);
+              insertData(billingdata);
             }
           }),
     );

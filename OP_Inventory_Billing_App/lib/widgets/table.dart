@@ -102,10 +102,10 @@ class SalesTableState extends State<SalesTable> {
             0.25 * w),
         onPressed: () {
           //print("Height is" + h.toString() + "Width is" + w.toString());
-          sortType = sortByBillingId;
-          isAscending = !isAscending;
-          sortBillingId(isAscending);
-          setState(() {});
+          // sortType = sortByBillingId;
+          // isAscending = !isAscending;
+          // sortBillingId(isAscending);
+          // setState(() {});
         },
       ),
       TextButton(
@@ -119,10 +119,10 @@ class SalesTableState extends State<SalesTable> {
                     : ''),
             0.25 * w),
         onPressed: () {
-          sortType = sortcountProducts;
-          isAscending = !isAscending;
-          sortNoOfProducts(isAscending);
-          setState(() {});
+          // sortType = sortcountProducts;
+          // isAscending = !isAscending;
+          // sortNoOfProducts(isAscending);
+          // setState(() {});
         },
       ),
       _getTitleItemWidget('Purchase Amount', 0.25 * w),

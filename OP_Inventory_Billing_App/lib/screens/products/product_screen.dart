@@ -1,3 +1,4 @@
+//http://192.168.174.1/billing_inventory_php/getData.php
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'dart:async';
@@ -17,8 +18,7 @@ Future<List<Product>> downloadJSON() async {
   // print("download json called");
 
   // const jsonEndpoint = "http://192.168.1.109:8080/php_workspace/product/getData.php";
-  const jsonEndpoint =
-      "http://192.168.0.105:80/php_workspace/inventory_app/getData.php";
+  const jsonEndpoint = "http://192.168.174.1/billing_inventory_php/getData.php";
   final response = await get(Uri.parse(jsonEndpoint));
   if (response.statusCode == 200) {
     List products = json.decode(response.body);
@@ -65,7 +65,6 @@ class ProductScreenState extends State<ProductScreen> {
                 isPerishAble: false,
               ),
             );
-            ;
           }));
         },
       ),
@@ -144,7 +143,7 @@ class _ItemsState extends State<Items> {
           value: items,
           child: Text(
             items,
-            style: TextStyle(fontSize: screenWidth * 0.03),
+            style: TextStyle(fontSize: screenWidth * 0.02),
           ),
         );
       }).toList(),
@@ -193,7 +192,7 @@ class _ItemsState extends State<Items> {
               Container(
                 child: dropdown(i),
                 alignment: Alignment.centerRight,
-                width: screenWidth * 0.4,
+                width: screenWidth * 0.33,
               )
             ],
           ),
@@ -224,12 +223,13 @@ class _ItemsState extends State<Items> {
           trailing: GestureDetector(
               child: SizedBox(
                   height: screenWidth * 0.1,
-                  width: screenWidth * 0.1,
+                  width: screenWidth * 0.14,
                   child: Card(
                     elevation: 5.0,
                     child: Center(
                       child: MyText(
                         text: product.productInStock.toString(),
+                        lines: 1,
                       ),
                     ),
                   )),
@@ -242,15 +242,6 @@ class _ItemsState extends State<Items> {
                   );
                 }));
               }),
-          // ontap: () {
-          //   Navigator.push(context, MaterialPageRoute(builder: (context) {
-          //     return UpdateProductScreen(
-          //       buttonTitle: 'Update',
-          //       appBarTitle: "Update ${product.productName}",
-          //       product: product,
-          //     );
-          //   }));
-          // },
         ),
       ),
     );

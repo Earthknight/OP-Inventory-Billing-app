@@ -13,9 +13,9 @@ List productsQuantity = [];
 
 Future<void> fetchProductIds() async {
   // var url = Uri.parse(
-  //     "http://192.168.0.7/products_php_files/fetchbillingid.php");
+  //     "http://192.168.174.1/billing_inventory_php/fetchbillingid.php");
   var url = Uri.parse(
-      "http://192.168.0.7/products_php_files/fetchproductid.php");
+      "http://192.168.174.1/billing_inventory_php/fetchproductid.php");
   final response = await get(url);
   if (response.statusCode == 200) {
     List productsIds = json.decode(response.body);
@@ -38,9 +38,9 @@ Future<void> fetchProductIds() async {
 
 Future<List<Product>> fetchProdata2() async {
   // var url = Uri.parse(
-  //     "http://192.168.0.7/products_php_files/fetchselectedproducts.php");
+  //     "http://192.168.174.1/billing_inventory_php/fetchselectedproducts.php");
   var url = Uri.parse(
-      "http://192.168.0.7/products_php_files/fetchselectedproducts.php");
+      "http://192.168.174.1/billing_inventory_php/fetchselectedproducts.php");
   for (int i = 0; i < productsIDs.length; i++) {
     var response = await http.post(url, body: {
       "productId": productsIDs[i].toString(),
@@ -84,7 +84,11 @@ class _BillingState extends State<BillingScreen> {
       int itemsAdd = int.parse(productsQuantity[i]);
       purchase += double.parse(list[i].productCost) * itemsAdd;
       print(purchase);
-      selling += (double.parse(list[i].sellingPrice) - (double.parse(list[i].sellingPrice) * int.parse(list[i].discount!) / 100)) * itemsAdd;
+      selling += (double.parse(list[i].sellingPrice) -
+              (double.parse(list[i].sellingPrice) *
+                  int.parse(list[i].discount!) /
+                  100)) *
+          itemsAdd;
     }
     totalPurchasePrice = purchase;
     totalSellingCost = selling;

@@ -2,13 +2,13 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'dart:async';
 import 'package:http/http.dart';
+import 'package:intl/intl.dart';
 import 'package:op_inventory_billing_app/model/products/product.dart';
 import 'package:op_inventory_billing_app/screens/products/product_screen.dart';
 import 'package:op_inventory_billing_app/widgets/TextFieldWidget.dart';
 import 'package:op_inventory_billing_app/widgets/TextWidget.dart';
 import 'package:op_inventory_billing_app/widgets/dialogBoxWidget.dart';
 import 'package:op_inventory_billing_app/widgets/get_device_size.dart';
-
 import '../../tab_bar_screen.dart';
 
 Future<bool> addProductOrNot(String productName) async {
@@ -25,6 +25,7 @@ Future<String> getProductId() async {
   var list = await downloadJSON();
   String id = list[list.length - 1].productId.substring(1);
   int idNumber = int.parse(id);
+  print("P${idNumber++}");
   return "P${idNumber++}";
 }
 
@@ -55,6 +56,7 @@ class UpdateProductScreenState extends State<UpdateProductScreen> {
   TextEditingController quantityController = TextEditingController();
   TextEditingController discountPercentageController = TextEditingController();
   bool isPerishableBool = false;
+  var selectedDate = null;
 
   @override
   void initState() {
@@ -64,34 +66,36 @@ class UpdateProductScreenState extends State<UpdateProductScreen> {
     quantityController.text = widget.product.productInStock;
     discountPercentageController.text = widget.product.discount!;
     isPerishableBool = widget.product.isPerishAble;
+    selectedDate = widget.product.expiryDate;
   }
 
   void addData() async {
     if (await addProductOrNot(productNameController.text) == false) {
       var productId = await getProductId();
       // print("addData called");
-      String id = productId;
+      String idnew = productId;
+      print(idnew);
       // var url = "http://192.168.174.1/Op/addData.php";
-      // var url = "http://192.168.1.109:8080/php_workspace/product/addData.php";
-      var url =
-          "http://192.168.0.105:80/php_workspace/inventory_app/addData.php";
+      var url = "http://192.168.174.1/billing_inventory_php/addData2.php";
+      // var url = "http://192.168.0.105:80/php_workspace/inventory_app/addData.php";
       await post(Uri.parse(url), body: {
-        "productId": id,
+        "productId": idnew,
         "productName": productNameController.text,
         "productCost": productRatePerItemController.text,
         "productInStock": sellingRatePerItemController.text,
         "sellingPrice": quantityController.text,
         "discount": discountPercentageController.text,
+        "expiry_date": "$selectedDate",
         "isPerishAble": forIsPerishable(isPerishableBool)
       });
     }
   }
 
   void editData() async {
+    print(widget.product.productId);
+    print(productRatePerItemController.text);
     // var url = "http://192.168.174.1/Op/addData.php";
-    // var url = "http://192.168.1.109:8080/php_workspace/product/editData.php";
-    var url =
-        "http://192.168.0.105:80/php_workspace/inventory_app/editData.php";
+    var url = "http://192.168.174.1/billing_inventory_php/editData2.php";
     await post(Uri.parse(url), body: {
       "productId": widget.product.productId,
       "productName": productNameController.text,
@@ -99,6 +103,7 @@ class UpdateProductScreenState extends State<UpdateProductScreen> {
       "productInStock": quantityController.text,
       "sellingPrice": sellingRatePerItemController.text,
       "discount": discountPercentageController.text,
+      "expiry_date": "$selectedDate",
       "isPerishAble": forIsPerishable(isPerishableBool)
     });
   }
@@ -108,6 +113,23 @@ class UpdateProductScreenState extends State<UpdateProductScreen> {
       return "1";
     }
     return "0";
+  }
+
+  void _presentDatePicker() {
+    showDatePicker(
+      context: context,
+      initialDate: DateTime.now(),
+      firstDate: DateTime(2022),
+      lastDate: DateTime(2050),
+    ).then((pickedDate) {
+      if (pickedDate == null) {
+        return;
+      }
+      setState(() {
+        selectedDate = pickedDate;
+        print(selectedDate);
+      });
+    });
   }
 
   @override
@@ -192,22 +214,23 @@ class UpdateProductScreenState extends State<UpdateProductScreen> {
                 MyTextField(discountPercentageController, TextInputType.number,
                     "Enter the discount percentage", "Please Enter a value"),
                 SizedBox(
-                  height: 0.05 * screenHeight,
+                  height: 0.02 * screenHeight,
                 ),
                 Row(
                   children: <Widget>[
                     SizedBox(
-                      width: 10,
+                      width: 5,
                     ), //SizedBox
                     MyText(
                       text: 'IS PERISHABLE?',
                       size: 3.0,
                     ), //Text
-                    SizedBox(width: 10), //SizedBox
+                    SizedBox(width: 5), //SizedBox
                     Checkbox(
                       value: isPerishableBool,
                       onChanged: (value) {
                         setState(() {
+                          print(isPerishableBool);
                           isPerishableBool = value!;
                           print(isPerishableBool);
                         });
@@ -215,6 +238,41 @@ class UpdateProductScreenState extends State<UpdateProductScreen> {
                     ), //Checkbox
                   ], //<Widget>[]
                 ),
+                isPerishableBool
+                    ? Row(
+                        children: [
+                          SizedBox(width: 5),
+                          const MyText(
+                            text: "EXPIRY DATE",
+                            size: 3.0,
+                          ),
+                          const SizedBox(
+                            width: 40,
+                          ),
+                          Text(
+                            DateFormat('yyyy-MM-dd')
+                                .format(selectedDate)
+                                .toString(),
+                            style: TextStyle(
+                              color: Colors.red,
+                            ),
+                          )
+                        ],
+                      )
+                    : SizedBox(),
+                isPerishableBool
+                    ? FlatButton(
+                        onPressed: _presentDatePicker,
+                        child: const Text(
+                          'Select A Date',
+                          style: TextStyle(
+                            fontFamily: 'Lato',
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        textColor: Theme.of(context).primaryColor,
+                      )
+                    : SizedBox(),
                 Row(
                   children: [
                     ElevatedButton(
@@ -271,6 +329,7 @@ class UpdateProductScreenState extends State<UpdateProductScreen> {
                             }
                           }
                         } else {
+                          print(2);
                           editData();
                           await downloadJSON();
                           if (_formKey.currentState!.validate()) {

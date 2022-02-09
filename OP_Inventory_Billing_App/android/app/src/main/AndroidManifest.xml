@@ -2,7 +2,6 @@
     package="com.example.op_inventory_billing_app">
    <application
         android:label="op_inventory_billing_app"
-        android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity
             android:name=".MainActivity"

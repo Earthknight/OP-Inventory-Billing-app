@@ -27,10 +27,10 @@ class ProductQRCodeDetailScreen extends StatefulWidget {
 class _ProductQRCodeDetailScreenState extends State<ProductQRCodeDetailScreen> {
   Future<void> addBillingItemInCart(int productQuantity) async {
     var url =
-        "http://192.168.0.105:80/php_workspace/inventory_app/add_product_item_in_billing.php";
+        "http://192.168.174.1/billing_inventory_php/add_product_item_in_billing.php";
     await post(Uri.parse(url), body: {
       "product_id": widget.productId,
-      "product_quantity": productQuantity.toString(),
+      "quantity": productQuantity.toString(),
     });
   }
 

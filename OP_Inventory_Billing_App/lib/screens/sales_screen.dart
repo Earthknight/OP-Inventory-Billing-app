@@ -192,7 +192,7 @@ class _SalesScreenState extends State<SalesScreen> {
       int a = 1;
       // print("empty");
       String BillingIdpad = a.toString().padLeft(5, '0');
-       //print(BillingIdpad);                                //get function to get billing id
+      //print(BillingIdpad);                                //get function to get billing id
       return BillingIdpad;
     } else {
       String result = l.last.billingId.substring(1, 6);
@@ -238,8 +238,7 @@ class _SalesScreenState extends State<SalesScreen> {
         BillingIdnew(l).toString() +
         "billingtaxnum" +
         Taxnumber);
-    var response =
-     await http.post(url, body: {
+    var response = await http.post(url, body: {
       "billingid": "B" +
           BillingIdnew(l)
               .toString(), //insertdata function in database refer inserbilling.php file
@@ -253,6 +252,9 @@ class _SalesScreenState extends State<SalesScreen> {
       "purchaseamount": totalPurchasePrice.toString(),
       "discount": "1"
     });
+    //await getbillingdata();
+    curr=await downloadJSON();
+    curr=updateList(dropdownvalue);
     print(response.body);
     if (response.statusCode == 200) {
       print(response.body);
